@@ -8,7 +8,6 @@ from datetime import datetime
 
 file_path = "vc_owners.json"
 
-
 bot = discord.Bot()
 
 try:
@@ -18,6 +17,7 @@ try:
         # Create Empty permanent VC list, when there is an JSON Decode error
         except json.JSONDecodeError:
             voice_channel_owners = []
+
 except FileNotFoundError:
     # File not found, create a new file
     with open(file_path, "w") as json_file:
@@ -30,9 +30,8 @@ print("Loading permanent Voice Channels:")
 
 if voice_channel_owners:
     for item in voice_channel_owners:
-        print("User_ID: " + str(item["User_ID"]))
-        print("VC_Channel_ID: " + str(item["VC_Channel_ID"]))
-        print("Last_Join: " + str(item["Last_Join"])  + "\n")
+        print(item)
+
 
 print("Loading completed")
 
@@ -43,6 +42,15 @@ print("Loading completed")
 async def on_ready():
     print(f"Logged in as {bot.user.name}")
 
+    for item in voice_channel_owners:
+        if item.get("Temp_VC") == "True":
+            VCChannelID = discord.utils.get(bot.get_all_channels(), id=item["VC_Channel_ID"],
+                                            type=discord.ChannelType.voice)
+            if VCChannelID is not None and len(VCChannelID.members) == 0:
+                await VCChannelID.delete()
+                print("Temporary VC: deleted VC with ID: " + str(item["VC_Channel_ID"]))
+
+
 # User joins the creation VC Channel
 @bot.event
 async def on_voice_state_update(member, before, after):
@@ -52,12 +60,22 @@ async def on_voice_state_update(member, before, after):
         new_channel = await guild.create_voice_channel(f'{member.name} VC', category=after.channel.category)
         await member.move_to(new_channel)
         print("Temporary VC: " + member.name + " created VC with ID: " + str(new_channel.id))
+        # Write User ID and VC Channel ID to the json
+        Entry = {
+            "VC_Channel_ID": after.channel.id,
+            "Temp_VC": "True"
+        }
+        voice_channel_owners.append(Entry)
+        with open(file_path, "w") as json_file:
+            json.dump(voice_channel_owners, json_file, indent=4)
+        json_file.close()
+
 
     # Check if the VC Channel is permanent
     permanent = False
     if before.channel:
         for item in voice_channel_owners:
-            if before.channel.id == item["VC_Channel_ID"]:
+            if item.get("Temp_VC") == "False" and before.channel.id == item["VC_Channel_ID"]:
                 permanent = True
                 break
 
@@ -109,7 +127,8 @@ async def vc_create(ctx, name: typing.Optional[str] = None):
     Entry = {
         "User_ID": ctx.author.id,
         "VC_Channel_ID": new_channel.id,
-        "Last_Join": datetime.now().timestamp()
+        "Last_Join": datetime.now().timestamp(),
+        "Temp_VC": "False"
     }
     voice_channel_owners.append(Entry)
 
@@ -179,7 +198,7 @@ async def on_guild_channel_delete(channel):
         # Check if the VC Channel belongs to a User
         for item in voice_channel_owners:
             if deleted_channel_id == item["VC_Channel_ID"]:
-                print("Permanent VC: " + str(item["User_ID"]) + " deleted Voice Channel " + str(item["VC_Channel_ID"]))
+                print("deleted Voice Channel " + str(item["VC_Channel_ID"]))
                 voice_channel_owners.remove(item)
                 # Save the updated JSON data back to the file
                 with open(file_path, "w") as json_file:
