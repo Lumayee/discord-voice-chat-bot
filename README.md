@@ -36,4 +36,9 @@ PERMANENT_ROLES = [int, int] or int
 - `VC_CATEGORY` is the is the category in which the permanent Voice Channels will be created.
 - `PERMANENT_ROLES` one or more Role IDs that can create permanent Voice Channels
 
-
+# Features
+- Create temp Voice Channel
+- Create permanent Voice Channel with `/vc_create` (only for permanent Voice Channels)
+- Rename permanent Voice Channel with `/vc_set_name` (only for permanent Voice Channels)
+- Set User Count with `/vc_set_user_count` 0 is unlimited (only for permanent Voice Channels)
+- Delete permanent Voice Channel with `/vc_delete` (only for permanent Voice Channels)

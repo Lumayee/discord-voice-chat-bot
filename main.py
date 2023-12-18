@@ -122,9 +122,9 @@ async def vc_create(ctx, name: typing.Optional[str] = None):
 
 # Slash command to change the user limit of a permanent VC
 @bot.command(description="VC set User Limit")
-async def vc_set_users(ctx, user_limit):
+async def vc_set_users(ctx, user_count):
     # Search the user ID in the JSON with the owners
-    if ctx.author.id:
+    if ctx.author.id in voice_channel_owners:
         for item in voice_channel_owners:
             if ctx.author.id == item["User_ID"]:
                 # When found, get the channel class and change the limit
@@ -142,7 +142,7 @@ async def vc_set_users(ctx, user_limit):
 @bot.command(description="VC set Name")
 async def vc_set_name(ctx, new_name):
     # Search the user ID in the JSON with the owners
-    if ctx.author.id:
+    if ctx.author.id in voice_channel_owners:
         for item in voice_channel_owners:
             if ctx.author.id == item["User_ID"]:
                 # When found, get the channel class and change the name
