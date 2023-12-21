@@ -2,11 +2,10 @@ import typing
 import discord
 import config
 import json
-import time
-#import schedule
+import asyncio
 from datetime import datetime
 
-file_path = "vc_owners.json"
+file_path = "vc_channels.json"
 
 bot = discord.Bot()
 
@@ -41,6 +40,8 @@ print("Loading completed")
 @bot.event
 async def on_ready():
     print(f"Logged in as {bot.user.name}")
+
+    bot.loop.create_task(check_inactive_vcs())
 
     for item in voice_channel_owners:
         if item.get("Temp_VC") == "True":
@@ -205,12 +206,6 @@ async def on_guild_channel_delete(channel):
                     json.dump(voice_channel_owners, json_file, indent=4)
                 break  # Exit the loop once the item is found
 
-# Just for Testing
-@bot.command(description="TEST")
-async def vc_test(ctx):
-        await ctx.respond(f"This is just an Test", ephemeral=True)
-
-
 # Delete the permanent VC, when a User is leaving the Server
 @bot.event
 async def on_member_remove(member):
@@ -231,6 +226,19 @@ async def on_member_remove(member):
             await VCChannelID.delete()
             print("Permanent VC: " + str(item["VC_Channel_ID"]) + " was deleted because it was inactive for 2 Months")
 
+
+async def check_inactive_vcs():
+    while True:
+        print("Checking inactive VCs")
+        #one_month_seconds = 30 * 24 * 60 * 60
+        one_month_seconds = 60 * 5
+
+        for item in voice_channel_owners:
+            if item.get("Temp_VC") == "False" and (datetime.now().timestamp() - item.get("Last_Join", 0) > one_month_seconds):
+                VCChannelID = discord.utils.get(bot.get_all_channels(), id=item["VC_Channel_ID"], type=discord.ChannelType.voice)
+                await VCChannelID.delete()
+
+        await asyncio.sleep(60)
 
 
 
