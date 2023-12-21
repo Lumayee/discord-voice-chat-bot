@@ -42,3 +42,37 @@ PERMANENT_ROLES = [int, int] or int
 - Rename permanent Voice Channel with `/vc_set_name` (only for permanent Voice Channels)
 - Set User Count with `/vc_set_user_count` 0 is unlimited (only for permanent Voice Channels)
 - Delete permanent Voice Channel with `/vc_delete` (only for permanent Voice Channels)
+
+
+# Setup stuff
+
+```bash
+sudo dnf install python3.11 python3-pip
+python3.11 -m venv PM-VC
+source PM-VC/bin/activate
+pip3 install py-cord
+deactivate
+```
+
+/etc/systemd/system/Discord-VC-Bot.service
+
+```bash
+[Unit]
+Description=Discord Voice Channel Bot
+After=network.target
+
+[Service]
+User=potion-maker-bots
+WorkingDirectory=/home/potion-maker-bots/VC-Bot
+ExecStart=/home/potion-maker-bots/VC-Bot/PM-VC/bin/python3.11 /home/potion-maker-bots/VC-Bot/main.py
+
+[Install]
+WantedBy=multi-user.target
+```
+
+```bash
+sudo systemctl enable Discord-VC-Bot
+sudo systemctl start Discord-VC-Bot
+```
+
+
