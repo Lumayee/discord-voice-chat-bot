@@ -231,3 +231,16 @@ async def check_inactive_vcs():
     while True:
         print("Checking inactive VCs")
         #one_month_seconds = 30 * 24 * 60 * 60
+        one_month_seconds = 60 * 5
+
+        for item in voice_channel_owners:
+            if item.get("Temp_VC") == "False" and (datetime.now().timestamp() - item.get("Last_Join", 0) > one_month_seconds):
+                VCChannelID = discord.utils.get(bot.get_all_channels(), id=item["VC_Channel_ID"], type=discord.ChannelType.voice)
+                await VCChannelID.delete()
+
+        await asyncio.sleep(60)
+
+
+
+
+bot.run(config.TOKEN)
