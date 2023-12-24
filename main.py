@@ -7,39 +7,39 @@ from datetime import datetime
 
 file_path = "vc_channels.json"
 bot = discord.Bot()
+voice_channel_owners = []
+
 
 # Load the JSON file with the VCs
-try:
-    print("Loading permanent Voice Channels:")
-    with open(file_path, "r") as json_file:
-        try:
-            voice_channel_owners = json.load(json_file)
+def load_vc():
+    global voice_channel_owners
 
-        # Create Empty permanent VC list, when there is an JSON Decode error
-        except json.JSONDecodeError:
-            voice_channel_owners = []
-            print("Error: JSON Decode Error, creating empty JSON file")
+    try:
+        print("Loading permanent Voice Channels:")
+        with open(file_path, "r") as json_file:
+            try:
+                voice_channel_owners = json.load(json_file)
+            except json.JSONDecodeError:
+                voice_channel_owners = []
+                print("Error: JSON Decode Error, creating empty JSON file")
+    except FileNotFoundError:
+        with open(file_path, "w") as json_file:
+            json.dump([], json_file)
+            print("Error: JSON File not found, creating empty JSON file")
 
-except FileNotFoundError:
-    # Create Empty VC list, when there is no JSON file
-    with open(file_path, "w") as json_file:
-        json.dump([], json_file)
-        print("Error: JSON File not found, creating empty JSON file")
-    voice_channel_owners = []
+    # Print the loaded VCs
+    if voice_channel_owners:
+        for item in voice_channel_owners:
+            print(item)
 
-json_file.close()
+    print("Loading completed")
 
-# Print the loaded VCs
-if voice_channel_owners:
-    for item in voice_channel_owners:
-        print(item)
-
-
-print("Loading completed")
 
 # After the Bot is ready
 @bot.event
 async def on_ready():
+    load_vc()
+
     print(f"Logged in as {bot.user.name}")
 
     # Launch the check for inactive VCs
@@ -48,10 +48,12 @@ async def on_ready():
     # Check for empty temporary VCs
     for item in voice_channel_owners:
         if item.get("Temp_VC") == "True":
-            VCChannelID = discord.utils.get(bot.get_all_channels(), id=item["VC_Channel_ID"],
-                                            type=discord.ChannelType.voice)
-            if VCChannelID is not None and len(VCChannelID.members) == 0:
-                await VCChannelID.delete()
+            vc_channel_id = discord.utils.get(bot.get_all_channels(),
+                                              id=int(item["VC_Channel_ID"]),
+                                              type=discord.ChannelType.voice)
+
+            if isinstance(vc_channel_id, discord.VoiceChannel) and len(vc_channel_id.members) == 0:
+                await vc_channel_id.delete()
                 print("Temporary VC: deleted VC with ID: " + str(item["VC_Channel_ID"]))
 
 
@@ -79,6 +81,8 @@ async def on_voice_state_update(member, before, after):
     # When a user leaves a VC, try to delete the channel
     # Check if the VC Channel is permanent
     permanent = False
+    item = None
+
     if before.channel:
         for item in voice_channel_owners:
             if item.get("Temp_VC") == "False" and before.channel.id == item["VC_Channel_ID"]:
@@ -86,11 +90,10 @@ async def on_voice_state_update(member, before, after):
                 break
 
     # If the VC is permanent, update the last join time
-    if permanent:
+    if item is not None and permanent:
         item["Last_Join"] = datetime.now().timestamp()
         with open(file_path, "w") as json_file:
             json.dump(voice_channel_owners, json_file, indent=4)
-        json_file.close()
 
     # If a temporary VC is empty, delete it
     else:
@@ -99,18 +102,20 @@ async def on_voice_state_update(member, before, after):
             await before.channel.delete()
             print("Temporary VC: deleted VC with ID: " + str(before.channel.id))
 
+
 # Slash Command for Bot Ping
-@bot.command(description="Sends the bot's latency.")
+@bot.command(description="Sends the bots latency.")
 async def ping(ctx):
     await ctx.respond(f"Pong! Latency is {bot.latency} s", ephemeral=True)
     print(str(ctx.author.name) + "(" + str(ctx.author.id) + ") " +
           "requested the Bot latency, the current Latency is: " + str(bot.latency) + "s")
 
+
 # Slash Command for VC Channel creation
 @bot.command(description="Create VC")
 async def vc_create(ctx, name: typing.Optional[str] = None):
     guild = ctx.guild
-    category = discord.utils.get(guild.categories, id=config.VC_CATEGORY)
+    category = discord.utils.get(guild.categories, id=int(config.VC_CATEGORY))
 
     # Check if the User already owns a VC
     for item in voice_channel_owners:
@@ -151,63 +156,94 @@ async def vc_create(ctx, name: typing.Optional[str] = None):
 
     json_file.close()
 
+
 # Slash command to change the user limit of a permanent VC
 @bot.command(description="VC set User Limit")
-async def vc_set_users(ctx, user_count):
-    # Search the user ID in the JSON with the owners
-    if ctx.author.id in voice_channel_owners:
-        for item in voice_channel_owners:
-            if ctx.author.id == item["User_ID"]:
-                # When found, get the channel class and change the limit
-                vc_channel_id = discord.utils.get(bot.get_all_channels(),
-                                                  id=item["VC_Channel_ID"],
-                                                  type=discord.ChannelType.voice)
+async def vc_set_users(ctx, user_count: int):
+    # Convert user_count to an integer if it's not
+    user_count = int(user_count)
 
-                if user_count == 0:
-                    await vc_channel_id.edit(user_limit=None)
-                else:
-                    await vc_channel_id.edit(user_limit=user_count)
-                await ctx.respond(f"Changed permanent VC User Count", ephemeral=True)
-                break
+    # Check if the User owns a permanent VC
+    owns_permanent_vc = False
+    vc_id = None
+
+    for item in voice_channel_owners:
+        if ctx.author.id == item.get("User_ID") and item.get("Temp_VC") == "False":
+            owns_permanent_vc = True
+            vc_id = item.get("VC_Channel_ID")
+            break
+
+    if owns_permanent_vc:
+        vc_channel_id = discord.utils.get(bot.get_all_channels(), id=vc_id, type=discord.ChannelType.voice)
+
+        # Check if the channel is a VoiceChannel and then edit it
+        if isinstance(vc_channel_id, discord.VoiceChannel):
+            if user_count == 0:
+                await vc_channel_id.edit(user_limit=0)
+            else:
+                await vc_channel_id.edit(user_limit=user_count)
+            await ctx.respond(f"Changed permanent VC User Count", ephemeral=True)
+
     else:
         await ctx.respond(f"You don't own any permanent VCs", ephemeral=True)
+
 
 # Slash command to change the name of a permanent VC
-@bot.command(description="Ranme your VC")
+@bot.command(description="Rename your VC")
 async def vc_rename(ctx, new_name):
     # Search the user ID in the JSON with the owners
-    if ctx.author.id in voice_channel_owners:
-        for item in voice_channel_owners:
-            if ctx.author.id == item["User_ID"]:
-                # When found, get the channel class and change the name
-                vc_channel_id = discord.utils.get(bot.get_all_channels(),
-                                                  id=item["VC_Channel_ID"],
-                                                  type=discord.ChannelType.voice)
 
-                await vc_channel_id.edit(name=new_name)
-                await ctx.respond(f"Changed permanent VC User Count", ephemeral=True)
-                break
+    # Check if the User owns a permanent VC
+    owns_permanent_vc = False
+    vc_id = None
+
+    for item in voice_channel_owners:
+        if ctx.author.id == item.get("User_ID") and item.get("Temp_VC") == "False":
+            owns_permanent_vc = True
+            vc_id = item.get("VC_Channel_ID")
+            break
+
+    if owns_permanent_vc:
+        # When found, get the channel class and change the name
+        vc_channel_id = discord.utils.get(bot.get_all_channels(),
+                                          id=int(vc_id),
+                                          type=discord.ChannelType.voice)
+
+        if isinstance(vc_channel_id, discord.VoiceChannel):
+            await vc_channel_id.edit(name=new_name)
+            await ctx.respond(f"Changed permanent VC Name to {new_name}", ephemeral=True)
+        else:
+            await ctx.respond(f"Channel with ID {vc_id} "
+                              f"is not a voice channel or does not exist.", ephemeral=True)
     else:
-        await ctx.respond(f"You don't own any permanent VCs", ephemeral=True)
+        await ctx.respond(f"You don't own a permanent VC", ephemeral=True)
+
 
 # Slash command to delete an permanent VC
 @bot.command(description="Delete VC")
 async def vc_delete(ctx):
-    # Search the user ID in the JSON with the owners
-    if ctx.author.id:
-        for item in voice_channel_owners:
-            if ctx.author.id == item["User_ID"]:
-                # When found, delete the channel
-                vc_channel_id = discord.utils.get(bot.get_all_channels(),
-                                                  id=item["VC_Channel_ID"],
-                                                  type=discord.ChannelType.voice)
 
-                await vc_channel_id.delete()
-                await ctx.respond(f"Permanent VC deleted", ephemeral=True)
-                break
+    # Check if the User owns a permanent VC
+    owns_permanent_vc = False
+    vc_id = None
+
+    for item in voice_channel_owners:
+        if ctx.author.id == item.get("User_ID") and item.get("Temp_VC") == "False":
+            owns_permanent_vc = True
+            vc_id = item.get("VC_Channel_ID")
+            break
+
+    if owns_permanent_vc:
+        vc_channel_id = discord.utils.get(bot.get_all_channels(),
+                                          id=int(vc_id),
+                                          type=discord.ChannelType.voice)
+
+        await vc_channel_id.delete()
+        await ctx.respond(f"Permanent VC deleted", ephemeral=True)
 
     else:
         await ctx.respond(f"You dont own an permanent VC", ephemeral=True)
+
 
 # Remove the VC Channel from the JSON, when the VC Channel is deleted
 @bot.event
@@ -226,6 +262,7 @@ async def on_guild_channel_delete(channel):
                     json.dump(voice_channel_owners, json_file, indent=4)
                 break  # Exit the loop once the item is found
 
+
 # Delete the permanent VC, when a User is leaving the Server
 @bot.event
 async def on_member_remove(member):
@@ -243,13 +280,13 @@ async def on_member_remove(member):
                 print(str(item["User_ID"]) + " deleted Voice Channel " + str(item["VC_Channel_ID"]))
                 await item.respond(f"Permanent VC deleted", ephemeral=True)
 
-                # Save the updated JSON data back to the file
                 with open(file_path, "w") as json_file:
                     json.dump(voice_channel_owners, json_file, indent=4)
                 break
             else:
                 print("Error: Could not delete Voice Channel " + str(item["VC_Channel_ID"]))
                 await item.respond(f"Failed to delete VC", ephemeral=True)
+
 
 # Check for inactive VCs
 async def check_inactive_vcs():
@@ -262,12 +299,11 @@ async def check_inactive_vcs():
                     (datetime.now().timestamp() - item.get("Last_Join", 0) > one_month_seconds)):
 
                 vc_channel_id = discord.utils.get(bot.get_all_channels(),
-                                                  id=item["VC_Channel_ID"],
+                                                  id=int(item["VC_Channel_ID"]),
                                                   type=discord.ChannelType.voice)
                 await vc_channel_id.delete()
 
         await asyncio.sleep(86400)  # 24 hours in seconds
-
 
 
 # MOD Commands
@@ -275,7 +311,6 @@ async def check_inactive_vcs():
 # Delete a permanent VC from another User
 @bot.command(description="Only for Mods: Delete VC")
 async def vc_mod_delete(ctx, vc_id):
-
     # Check if the User has a Moderator Role
     mod_rights = False
     for role in ctx.author.roles:
@@ -283,25 +318,26 @@ async def vc_mod_delete(ctx, vc_id):
             mod_rights = True
             break
 
-    # Try to delete the VC
     if mod_rights:
+        # When found, get the channel class and delete it
         vc_channel_id = discord.utils.get(bot.get_all_channels(),
-                                          id=vc_id,
+                                          id=int(vc_id),
                                           type=discord.ChannelType.voice)
 
-        deletion = await vc_channel_id.delete()
-        if deletion:
-            await ctx.respond(f"Permanent VC deleted", ephemeral=True)
+        if isinstance(vc_channel_id, discord.VoiceChannel):
+            await vc_channel_id.delete()
+            await ctx.respond(f"Deleted the voice channel", ephemeral=True)
         else:
-            await ctx.respond(f"Permanent VC could not be deleted", ephemeral=True)
+            await ctx.respond(f"Channel with ID {vc_id} is not a voice channel or does not exist.", ephemeral=True)
 
     else:
         await ctx.respond(f"You don't have Moderator rights", ephemeral=True)
 
+
+
 # Rename a permanent VC from another User
 @bot.command(description="Only for Mods: Rename VC")
 async def vc_mod_rename(ctx, vc_id, new_name):
-
     # Check if the User has a Moderator Role
     mod_rights = False
     for role in ctx.author.roles:
@@ -311,15 +347,18 @@ async def vc_mod_rename(ctx, vc_id, new_name):
 
     # Try to change the name of the VC
     if mod_rights:
-        vc_channel_id = discord.utils.get(bot.get_all_channels(), id=vc_id, type=discord.ChannelType.voice)
-        renamed = await vc_channel_id.edit(name=new_name)
+        vc_channel_id = discord.utils.get(bot.get_all_channels(),
+                                          id=int(vc_id),
+                                          type=discord.ChannelType.voice)
 
-        if renamed:
-            await ctx.respond(f"Changed permanent VC Name", ephemeral=True)
+        if isinstance(vc_channel_id, discord.VoiceChannel):
+            await vc_channel_id.edit(name=new_name)
+            await ctx.respond(f"Changed permanent VC Name to {new_name}", ephemeral=True)
         else:
-            await ctx.respond(f"Permanent VC could not be renamed", ephemeral=True)
+            await ctx.respond(f"Channel with ID {vc_id} is not a voice channel or does not exist.", ephemeral=True)
 
     else:
         await ctx.respond(f"You don't have Moderator rights", ephemeral=True)
+
 
 bot.run(config.TOKEN)
