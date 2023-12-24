@@ -1,24 +1,44 @@
-# Discord Bot to manage Voice Chat Channels
+# Features / Todo List
 
-This Bot is used to create and delete Voice Channels. The main function is to create new temporary Voice Chat Channels when a user joins a `Join to create new VC` Channel.
-The user that joined the creation VC will have all rights for the new Channel, when a channel is empty, it will be deleted.
+## Normal User Features
+- [x] Create a temporary Voice Chat Channel
 
-In contrast to temporary, the Bot can also create permanent Channels, these will be created with `/vc_create`. 
-A user has to have a specific Role to create these VCs and each User can only create one permanent Channel.
-Like the temporary Channels the User that ran the command will have all the Channel rights.
+## Permanent Voice Chat Channel Features for Special Roles
+- [x] Create a permanent Voice Chat Channel
+- [x] Set the name of your permanent Voice Chat Channel 
+- [x] Set the user count of your permanent Voice Chat Channel
+- [x] Delete your permanent Voice Chat Channel
+- [ ] Kick or Ban a User from your permanent Voice Chat Channel 
 
-## Requirements
+## Mod Features
+- [x] Delete a permanent Voice Chat Channel
+- [x] Rename a permanent Voice Chat Channel
+- [ ] Kick or Ban a User from a permanent Voice Chat Channel
+- [ ] Kick a User from a temporary Voice Chat Channel
 
-This bot needs `py-chord`
+## Other Features
+- [x] Ping Command
+- [ ] Help Command
+- [ ] Bot Status Command
+- [ ] Blacklist for Channel Names
+- [x] File to permanently store Channel Information (for all permanent and temporary Voice Chat Channels)
 
-```bash
-python3 -m pip install -U py-cord
-```
-
-## Commands
+# Commands
 
 - `/vc_create` - creates a permanent Voice Chat Channel 
 - `/ping` - get the Latency of the Bot
+- `/vc_rename` - set the name of a permanent Voice Chat Channel
+- `/vc_set_user_count` - set the user count of a permanent Voice Chat Channel
+- `/vc_delete` - delete a permanent Voice Chat Channel
+- `/vc_mod_delete` - delete a permanent Voice Chat Channel (only for Mods)
+- `/vc_mod_rename` - set the name of a permanent Voice Chat Channel (only for Mods)
+
+# If you want to use this Bot yourself
+
+## Requirements
+
+- [py-cord](https://docs.pycord.dev/en/stable/index.html)
+
 
 ## config.py
 
@@ -29,22 +49,19 @@ TOKEN = 'string'
 CREATE_CHANNEL = int
 VC_CATEGORY = int
 PERMANENT_ROLES = [int, int] or int
+MOD_ROLES = [int, int] or int
 ```
 
-- `TOKEN` has to be your Bot Token, keep in Mind, that this has to be in `''` becuase it will be used as a string.
+- `TOKEN` has to be your Bot Token, keep in Mind, that this has to be in `''` because it will be used as a string.
 - `CREATE_CHANNEL` is the ID of the Voice Chat Channel, that people can join to create new temporary ones.
 - `VC_CATEGORY` is the is the category in which the permanent Voice Channels will be created.
 - `PERMANENT_ROLES` one or more Role IDs that can create permanent Voice Channels
-
-# Features
-- Create temp Voice Channel
-- Create permanent Voice Channel with `/vc_create` (only for permanent Voice Channels)
-- Rename permanent Voice Channel with `/vc_set_name` (only for permanent Voice Channels)
-- Set User Count with `/vc_set_user_count` 0 is unlimited (only for permanent Voice Channels)
-- Delete permanent Voice Channel with `/vc_delete` (only for permanent Voice Channels)
+- `MOD_ROLES` one or more Role IDs that can use the Mod Bot Commands
 
 
-# Setup stuff
+## Setup stuff
+
+### Setting up the Python environment and installing the packages
 
 ```bash
 sudo dnf install python3.11 python3-pip
@@ -54,7 +71,11 @@ pip3 install py-cord
 deactivate
 ```
 
-/etc/systemd/system/Discord-VC-Bot.service
+### Setting up the systemd service
+
+If you want to run the Bot as a service, you can use this example service file:
+
+Create the file `/etc/systemd/system/Discord-VC-Bot.service` with the following content:
 
 ```bash
 [Unit]

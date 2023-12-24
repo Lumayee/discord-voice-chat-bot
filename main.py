@@ -159,7 +159,7 @@ async def vc_create(ctx, name: typing.Optional[str] = None):
 
 # Slash command to change the user limit of a permanent VC
 @bot.command(description="VC set User Limit")
-async def vc_set_users(ctx, user_count: int):
+async def vc_set_user_count(ctx, user_count: int):
     # Convert user_count to an integer if it's not
     user_count = int(user_count)
 
