@@ -8,13 +8,13 @@
 - [x] Set the name of your permanent Voice Chat Channel 
 - [x] Set the user count of your permanent Voice Chat Channel
 - [x] Delete your permanent Voice Chat Channel
-- [ ] Kick or Ban a User from your permanent Voice Chat Channel 
+- [x] Kick or Ban a User from your permanent Voice Chat Channel 
 
 ## Mod Features
 - [x] Delete a permanent Voice Chat Channel
 - [x] Rename a permanent Voice Chat Channel
-- [ ] Kick or Ban a User from a permanent Voice Chat Channel
-- [ ] Kick a User from a temporary Voice Chat Channel
+- [x] Kick or Ban a User from a permanent Voice Chat Channel
+- [x] Kick a User from a temporary Voice Chat Channel
 
 ## Admin Features
 - [ ] Command to add or remove permanent Roles
