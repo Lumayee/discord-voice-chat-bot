@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f9c84772-49c8-42d2-b22e-b521554a2386" name="Changes" comment="Added a few features to my List">
+    <list default="true" id="f9c84772-49c8-42d2-b22e-b521554a2386" name="Changes" comment="reformated the code and added functions to kick people from VCs">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
@@ -75,7 +75,7 @@
       <workItem from="1703346705521" duration="20180000" />
       <workItem from="1703518045609" duration="428000" />
       <workItem from="1703518551310" duration="299000" />
-      <workItem from="1703523708564" duration="5234000" />
+      <workItem from="1703523708564" duration="13757000" />
     </task>
     <task id="LOCAL-00001" summary="Initial commit with working version">
       <option name="closed" value="true" />
@@ -157,7 +157,15 @@
       <option name="project" value="LOCAL" />
       <updated>1703518706033</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="reformated the code and added functions to kick people from VCs">
+      <option name="closed" value="true" />
+      <created>1703529110041</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1703529110041</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -185,9 +193,19 @@
     <MESSAGE value="Fixed functions" />
     <MESSAGE value="Better Readme" />
     <MESSAGE value="Added a few features to my List" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added a few features to my List" />
+    <MESSAGE value="reformated the code and added functions to kick people from VCs" />
+    <option name="LAST_COMMIT_MESSAGE" value="reformated the code and added functions to kick people from VCs" />
   </component>
   <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/main.py</url>
+          <line>119</line>
+          <option name="timeStamp" value="13" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
     <watches-manager>
       <configuration name="PythonConfigurationType">
         <watch expression="voice_channel_owners" />
@@ -195,6 +213,6 @@
     </watches-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/VC_Bot$main.coverage" NAME="main Coverage Results" MODIFIED="1703528905109" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/VC_Bot$main.coverage" NAME="main Coverage Results" MODIFIED="1703537342593" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>
