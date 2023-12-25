@@ -21,9 +21,9 @@
 
 ## Other Features
 - [x] Ping Command
-- [ ] Help Command
+- [x] Help Command
 - [ ] Bot Status Command
-- [ ] List permanent Voice Chat roles
+- [x] List permanent Voice Chat roles
 - [ ] Blacklist for Channel Names
 - [x] File to permanently store Channel Information (for all permanent and temporary Voice Chat Channels)
 

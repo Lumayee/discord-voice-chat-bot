@@ -518,6 +518,41 @@ async def vc_mod_unban(ctx, vc_id, user_id):
 
     else:
         await ctx.respond(f"You don't have Moderator rights", ephemeral=True)
+@bot.command(description="Help")
+async def vc_help(ctx):
+    embed = discord.Embed(title="Help", description="Commands for the VC Bot", color=0x00ff00)
+    embed.add_field(name="**General Settings**", value="---", inline=False)
+    embed.add_field(name="/ping", value="Sends the bots latency", inline=False)
+    embed.add_field(name="/vc_create", value="Creates a temporary VC", inline=False)
+    embed.add_field(name="/vc_set_user_count", value="Sets the user limit of your permanent VC", inline=False)
+    embed.add_field(name="/vc_rename", value="Renames your permanent VC", inline=False)
+    embed.add_field(name="/vc_delete", value="Deletes your permanent VC", inline=False)
+    embed.add_field(name="/vc_kick", value="Kicks a user from your permanent VC", inline=False)
+    embed.add_field(name="/vc_ban", value="Bans a user from your permanent VC", inline=False)
+    embed.add_field(name="/vc_unban", value="Unbans a user from your permanent VC", inline=False)
+    embed.add_field(name="/vc_help", value="Shows this help message", inline=False)
+
+    embed.add_field(name="**Mod Settings**", value="---", inline=False)
+    embed.add_field(name="/vc_mod_delete", value="Deletes a permanent VC", inline=False)
+    embed.add_field(name="/vc_mod_rename", value="Renames a permanent VC", inline=False)
+    embed.add_field(name="/vc_mod_kick", value="Kicks a user from a permanent VC", inline=False)
+    embed.add_field(name="/vc_mod_ban", value="Bans a user from a permanent VC", inline=False)
+    embed.add_field(name="/vc_mod_unban", value="Unbans a user from a permanent VC", inline=False)
+    embed.add_field(name="/vc_mod_listpermaroles", value="Lists all permanent VC roles", inline=False)
+
+    await ctx.respond(embed=embed, ephemeral=True)
+
+@bot.command(description="List all permanent VC Roles")
+async def vc_mod_listpermaroles(ctx):
+    mod_rights = getModRights(ctx.author)
+
+    if mod_rights:
+        embed = discord.Embed(title="Permanent VC Roles", description="List of all permanent VC roles", color=0x00ff00)
+        for role in config.PERMANENT_ROLES:
+            embed.add_field(name=role, value="", inline=False)
+
+        await ctx.respond(embed=embed, ephemeral=True)
+
 
 
 bot.run(config.TOKEN)
