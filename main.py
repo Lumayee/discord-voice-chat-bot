@@ -450,15 +450,12 @@ async def vc_ban(ctx, user_id):
             # Check if the user is in the VC
             for member in voice_channel.members:
                 if member.id == int(user_id):
-                    if addBan(user_id, voice_channel.id):
-                        await member.move_to(None)
-                        await ctx.respond(f"Banned user from VC", ephemeral=True)
-                        return
-                    else:
-                        await ctx.respond(f"Error: Could not ban user", ephemeral=True)
-                        return
+                    await member.move_to(None)
 
-            await ctx.respond(f"User is not in the VC", ephemeral=True)
+            if addBan(user_id, voice_channel.id):
+                await ctx.respond(f"Banned user from VC", ephemeral=True)
+            else:
+                await ctx.respond(f"Error: Could not ban user", ephemeral=True)
 
     else:
         await ctx.respond(f"You don't own a permanent VC", ephemeral=True)
@@ -475,16 +472,53 @@ async def vc_unban(ctx, user_id):
             # Check if the user is in the VC
             for member in voice_channel.members:
                 if member.id == int(user_id):
-                    if removeBan(user_id, voice_channel.id):
-                        await ctx.respond(f"Unbanned user from VC", ephemeral=True)
-                        return
-                    else:
-                        await ctx.respond(f"Error: Could not unban user", ephemeral=True)
-                        return
+                    await member.move_to(None)
 
-            await ctx.respond(f"User is not in the VC", ephemeral=True)
+            if removeBan(user_id, voice_channel.id):
+                await ctx.respond(f"Banned user from VC", ephemeral=True)
+            else:
+                await ctx.respond(f"Error: Could not ban user", ephemeral=True)
 
     else:
         await ctx.respond(f"You don't own a permanent VC", ephemeral=True)
+
+
+@bot.command(description="Mod: Ban User from VC")
+async def vc_mod_ban(ctx, vc_id, user_id):
+    # Check if the User has a Moderator Role
+    mod_rights = getModRights(ctx.author)
+    voice_channel = getVCFromID(vc_id)
+
+    if mod_rights and isinstance(voice_channel, discord.VoiceChannel):
+        # Check if the user is in the VC
+        for member in voice_channel.members:
+            if member.id == int(user_id):
+                await member.move_to(None)
+
+        if addBan(user_id, voice_channel.id):
+            await ctx.respond(f"Banned user from VC", ephemeral=True)
+        else:
+            await ctx.respond(f"Error: Could not ban user", ephemeral=True)
+
+    else:
+        await ctx.respond(f"You don't have Moderator rights", ephemeral=True)
+
+
+@bot.command(description="Mod: unban User from VC")
+async def vc_mod_unban(ctx, vc_id, user_id):
+    # Check if the User has a Moderator Role
+    mod_rights = getModRights(ctx.author)
+    voice_channel = getVCFromID(vc_id)
+
+    if mod_rights and isinstance(voice_channel, discord.VoiceChannel):
+        if removeBan(user_id, voice_channel.id):
+            await ctx.respond(f"UnBanned user from VC", ephemeral=True)
+        else:
+            await ctx.respond(f"Error: Could not unban user", ephemeral=True)
+
+    else:
+        await ctx.respond(f"You don't have Moderator rights", ephemeral=True)
+
+
 
 bot.run(config.TOKEN)

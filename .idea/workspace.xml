@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f9c84772-49c8-42d2-b22e-b521554a2386" name="Changes" comment="reformated the code and added functions to kick people from VCs">
+    <list default="true" id="f9c84772-49c8-42d2-b22e-b521554a2386" name="Changes" comment="Cleaned up the code and fixed the ban check">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
@@ -75,7 +75,7 @@
       <workItem from="1703346705521" duration="20180000" />
       <workItem from="1703518045609" duration="428000" />
       <workItem from="1703518551310" duration="299000" />
-      <workItem from="1703523708564" duration="13757000" />
+      <workItem from="1703523708564" duration="15434000" />
     </task>
     <task id="LOCAL-00001" summary="Initial commit with working version">
       <option name="closed" value="true" />
@@ -165,7 +165,15 @@
       <option name="project" value="LOCAL" />
       <updated>1703529110041</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="Cleaned up the code and fixed the ban check">
+      <option name="closed" value="true" />
+      <created>1703537766761</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1703537766761</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -194,7 +202,8 @@
     <MESSAGE value="Better Readme" />
     <MESSAGE value="Added a few features to my List" />
     <MESSAGE value="reformated the code and added functions to kick people from VCs" />
-    <option name="LAST_COMMIT_MESSAGE" value="reformated the code and added functions to kick people from VCs" />
+    <MESSAGE value="Cleaned up the code and fixed the ban check" />
+    <option name="LAST_COMMIT_MESSAGE" value="Cleaned up the code and fixed the ban check" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -203,6 +212,16 @@
           <url>file://$PROJECT_DIR$/main.py</url>
           <line>119</line>
           <option name="timeStamp" value="13" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/main.py</url>
+          <line>466</line>
+          <option name="timeStamp" value="14" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/main.py</url>
+          <line>107</line>
+          <option name="timeStamp" value="16" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
@@ -213,6 +232,6 @@
     </watches-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/VC_Bot$main.coverage" NAME="main Coverage Results" MODIFIED="1703537342593" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/VC_Bot$main.coverage" NAME="main Coverage Results" MODIFIED="1703539118593" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>
