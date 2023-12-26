@@ -34,9 +34,9 @@ def load_vc():
         print("Loading permanent Voice Channels:")
         with open(paths.file_path, "r") as json_file:
             try:
-                voice_channel_owners = json.load(json_file)
+                paths.voice_channel_owners = json.load(json_file)
             except json.JSONDecodeError:
-                voice_channel_owners = []
+                paths.voice_channel_owners = []
                 print("Error: JSON Decode Error, creating empty JSON file")
     except FileNotFoundError:
         with open(paths.file_path, "w") as json_file:
@@ -44,9 +44,11 @@ def load_vc():
             print("Error: JSON File not found, creating empty JSON file")
 
     # Print the loaded VCs
-    if voice_channel_owners:
-        for item in voice_channel_owners:
+    if paths.voice_channel_owners:
+        for item in paths.voice_channel_owners:
             print(item)
+
+    print(paths.voice_channel_owners)
 
     print("Loading completed")
 

@@ -43,15 +43,11 @@ async def vc_create(ctx, name: typing.Optional[str] = None):
         "Temp_VC": "False",
         "Ban": []
     }
-    config.voice_channel_owners.append(entry)
+
+    utils.append_to_json(entry)
 
     print("Permanent VC: " + str(ctx.author.name) + "(" +
           str(ctx.author.id) + ") " + "created Voice Channel " + str(entry["VC_Channel_ID"]))
-
-    with open(config.file_path, "w") as json_file:
-        json.dump(config.voice_channel_owners, json_file, indent=4)
-
-    json_file.close()
 
 
 @config.bot.command(description="unban User from VC")
@@ -62,11 +58,6 @@ async def vc_unban(ctx, user_id):
     if owns_permanent_vc:
         # Check if the channel is a VoiceChannel and then edit it
         if isinstance(voice_channel, discord.VoiceChannel):
-            # Check if the user is in the VC
-            for member in voice_channel.members:
-                if member.id == int(user_id):
-                    await member.move_to(None)
-
             if utils.removeBan(user_id, voice_channel.id):
                 await ctx.respond(f"Banned user from VC", ephemeral=True)
             else:
@@ -85,9 +76,8 @@ async def vc_ban(ctx, user_id):
         # Check if the channel is a VoiceChannel and then edit it
         if isinstance(voice_channel, discord.VoiceChannel):
             # Check if the user is in the VC
-            for member in voice_channel.members:
-                if member.id == int(user_id):
-                    await member.move_to(None)
+
+            await utils.kick_user_from_vc(voice_channel, user_id)
 
             if utils.addBan(user_id, voice_channel.id):
                 await ctx.respond(f"Banned user from VC", ephemeral=True)
@@ -98,6 +88,7 @@ async def vc_ban(ctx, user_id):
         await ctx.respond(f"You don't own a permanent VC", ephemeral=True)
 
 
+@config.bot.user_command(name="Kick User from VC")
 # Kick a user from your permanent VC
 @config.bot.command(description="Kick User from VC")
 async def vc_kick(ctx, user_id):
@@ -105,16 +96,8 @@ async def vc_kick(ctx, user_id):
     owns_permanent_vc, voice_channel = utils.check_permanent_owner(ctx.author.id)
 
     if owns_permanent_vc:
-        # Check if the channel is a VoiceChannel and then edit it
-        if isinstance(voice_channel, discord.VoiceChannel):
-            # Check if the user is in the VC
-            for member in voice_channel.members:
-                if member.id == int(user_id):
-                    await member.move_to(None)
-                    await ctx.respond(f"Kicked user from VC", ephemeral=True)
-                    return
-
-            await ctx.respond(f"User is not in the VC", ephemeral=True)
+        await utils.kick_user_from_vc(voice_channel, user_id)
+        await ctx.respond(f"User is not in the VC", ephemeral=True)
 
     else:
         await ctx.respond(f"You don't own a permanent VC", ephemeral=True)

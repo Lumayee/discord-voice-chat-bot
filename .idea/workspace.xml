@@ -4,16 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f9c84772-49c8-42d2-b22e-b521554a2386" name="Changes" comment="Added Help and List Perma Roles command">
-      <change afterPath="$PROJECT_DIR$/base_functions.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/config.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/file_handling.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/mod_functions.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/permanent_functions.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/utils.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+    <list default="true" id="f9c84772-49c8-42d2-b22e-b521554a2386" name="Changes" comment="split into multiple files">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/base_functions.py" beforeDir="false" afterPath="$PROJECT_DIR$/base_functions.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/file_handling.py" beforeDir="false" afterPath="$PROJECT_DIR$/file_handling.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/permanent_functions.py" beforeDir="false" afterPath="$PROJECT_DIR$/permanent_functions.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -44,8 +40,11 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "Python.base_functions.executor": "Debug",
     "Python.file_handling.executor": "Run",
     "Python.main.executor": "Run",
+    "Python.permanent_functions.executor": "Debug",
+    "Python.utils.executor": "Debug",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "main",
@@ -84,7 +83,8 @@
       <workItem from="1703518045609" duration="428000" />
       <workItem from="1703518551310" duration="299000" />
       <workItem from="1703523708564" duration="17567000" />
-      <workItem from="1703578747445" duration="9265000" />
+      <workItem from="1703578747445" duration="9420000" />
+      <workItem from="1703614350128" duration="17814000" />
     </task>
     <task id="LOCAL-00001" summary="Initial commit with working version">
       <option name="closed" value="true" />
@@ -206,7 +206,15 @@
       <option name="project" value="LOCAL" />
       <updated>1703541414646</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="split into multiple files">
+      <option name="closed" value="true" />
+      <created>1703598291873</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1703598291873</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -239,17 +247,37 @@
     <MESSAGE value="Fixed the ban and unban commands" />
     <MESSAGE value="Updated the Readme" />
     <MESSAGE value="Added Help and List Perma Roles command" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added Help and List Perma Roles command" />
+    <MESSAGE value="split into multiple files" />
+    <option name="LAST_COMMIT_MESSAGE" value="split into multiple files" />
   </component>
   <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/base_functions.py</url>
+          <line>12</line>
+          <option name="timeStamp" value="12" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/utils.py</url>
+          <line>128</line>
+          <option name="timeStamp" value="13" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
     <watches-manager>
       <configuration name="PythonConfigurationType">
         <watch expression="voice_channel_owners" />
+        <watch expression="config.config" />
+        <watch expression="paths.voice_channel_owners" />
       </configuration>
     </watches-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/VC_Bot$utils.coverage" NAME="utils Coverage Results" MODIFIED="1703633174637" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/VC_Bot$file_handling.coverage" NAME="file_handling Coverage Results" MODIFIED="1703595626923" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/VC_Bot$main.coverage" NAME="main Coverage Results" MODIFIED="1703596098971" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/VC_Bot$base_functions.coverage" NAME="base_functions Coverage Results" MODIFIED="1703630045201" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/VC_Bot$permanent_functions.coverage" NAME="permanent_functions Coverage Results" MODIFIED="1703622551138" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/VC_Bot$main.coverage" NAME="main Coverage Results" MODIFIED="1703633550757" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>

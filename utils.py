@@ -91,11 +91,11 @@ def isBanned(user_id, vc_id):
 
 
 def getPermaentVCIDList():
-    list = []
+    test = []
     for item in config.voice_channel_owners:
         if item.get("Temp_VC") == "False":
-            list.append(item.get("VC_Channel_ID"))
-    return list
+            test.append(item.get("VC_Channel_ID"))
+    return test
 
 
 # Check for inactive VCs
@@ -114,3 +114,18 @@ async def check_inactive_vcs():
 
         await asyncio.sleep(86400)  # 24 hours in seconds
 
+
+async def kick_user_from_vc(voice_channel, user_id):
+    if isinstance(voice_channel, discord.VoiceChannel):
+        for member in voice_channel.members:
+            if member.id == int(user_id):
+                await member.move_to(None)
+                return True
+        return False
+
+
+def append_to_json(entry):
+    config.voice_channel_owners.append(entry)
+    with open(config.file_path, "w") as json_file:
+        json.dump(entry, json_file, indent=4)
+    json_file.close()

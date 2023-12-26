@@ -22,10 +22,8 @@ async def on_voice_state_update(member, before, after):
                 "VC_Channel_ID": after.channel.id,
                 "Temp_VC": "True"
             }
-            config.voice_channel_owners.append(entry)
-            with open(config.file_path, "w") as json_file:
-                json.dump(config.voice_channel_owners, json_file, indent=4)
-            json_file.close()
+
+            utils.append_to_json(entry)
 
     # User Joins a permanent VC
     elif after and after.channel and after.channel.id in permanentVCs:
