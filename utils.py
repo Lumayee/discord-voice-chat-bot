@@ -4,6 +4,7 @@ import discord
 import asyncio
 from datetime import datetime
 
+
 def check_permanent_owner(user_id):
     # Check if the User owns a permanent VC
     owns_permanent_vc = False
@@ -84,9 +85,10 @@ def removeBan(user_id, vc_id):
 
 def isBanned(user_id, vc_id):
     for item in config.voice_channel_owners:
-        for ban in item.get("Ban"):
-            if user_id == int(ban) and vc_id == item.get("VC_Channel_ID"):
-                return True
+        if item.get("Ban") is not None:
+            for ban in item.get("Ban"):
+                if user_id == int(ban) and vc_id == item.get("VC_Channel_ID"):
+                    return True
     return False
 
 
@@ -127,5 +129,5 @@ async def kick_user_from_vc(voice_channel, user_id):
 def append_to_json(entry):
     config.voice_channel_owners.append(entry)
     with open(config.file_path, "w") as json_file:
-        json.dump(entry, json_file, indent=4)
+        json.dump(config.voice_channel_owners, json_file, indent=4)
     json_file.close()

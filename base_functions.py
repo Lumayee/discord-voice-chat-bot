@@ -15,15 +15,14 @@ async def on_voice_state_update(member, before, after):
         new_channel = await guild.create_voice_channel(f'{member.name} VC', category=after.channel.category)
         creation = await member.move_to(new_channel)
 
-        if creation:
-            print("Temporary VC: " + member.name + " created VC with ID: " + str(new_channel.id))
-            # Write User ID and VC Channel ID to the json
-            entry = {
-                "VC_Channel_ID": after.channel.id,
-                "Temp_VC": "True"
-            }
+        print("Temporary VC: " + member.name + " created VC with ID: " + str(new_channel.id))
+        # Write User ID and VC Channel ID to the json
+        entry = {
+            "VC_Channel_ID": after.channel.id,
+            "Temp_VC": "True"
+        }
 
-            utils.append_to_json(entry)
+        utils.append_to_json(entry)
 
     # User Joins a permanent VC
     elif after and after.channel and after.channel.id in permanentVCs:
