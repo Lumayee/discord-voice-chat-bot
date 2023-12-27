@@ -1,6 +1,4 @@
 import discord
-import json
-import file_handling
 import config
 import utils
 
@@ -33,6 +31,7 @@ async def vc_mod_unban(ctx, vc_id, user_id):
         await ctx.respond(f"You don't have Moderator rights", ephemeral=True)
 
 
+#@config.bot.user_command(name="Mod: Ban User from VC App")
 @config.bot.command(description="Mod: Ban User from VC")
 async def vc_mod_ban(ctx, vc_id, user_id):
     # Check if the User has a Moderator Role
@@ -54,6 +53,7 @@ async def vc_mod_ban(ctx, vc_id, user_id):
         await ctx.respond(f"You don't have Moderator rights", ephemeral=True)
 
 
+#@config.bot.user_command(name="Mod: Kick User from VC")
 # Kick a user from a permanent VC
 @config.bot.command(description="Kick User a VC")
 async def vc_mod_kick(ctx, vc_id, user_id):

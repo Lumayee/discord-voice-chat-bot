@@ -42,7 +42,7 @@ def getModRights(user_id):
     # Check if the User has a Moderator Role
     mod_rights = False
     for role in user_id.roles:
-        if role.id in config.MOD_ROLES:
+        if role.id in config.config.get("MOD_ROLES"):
             mod_rights = True
             break
     return mod_rights
