@@ -53,7 +53,28 @@ async def vc_mod_ban(ctx, vc_id, user_id):
         await ctx.respond(f"You don't have Moderator rights", ephemeral=True)
 
 
-#@config.bot.user_command(name="Mod: Kick User from VC")
+@config.bot.user_command(name="Moderator: Ban User from VC")
+async def vc_mod_ban_app(ctx, user: discord.User):
+    # Check if the User has a Moderator Role
+    mod_rights = utils.getModRights(ctx.author)
+    voice_channel = utils.getVCFromID(user.voice.channel.id)
+
+    if mod_rights and isinstance(voice_channel, discord.VoiceChannel):
+        # Check if the user is in the VC
+        for member in voice_channel.members:
+            if member.id == int(user.id):
+                await member.move_to(None)
+
+        if utils.addBan(user.id, voice_channel.id):
+            await ctx.respond(f"Banned user from VC", ephemeral=True)
+        else:
+            await ctx.respond(f"Error: Could not ban user", ephemeral=True)
+
+    else:
+        await ctx.respond(f"You don't have Moderator rights", ephemeral=True)
+
+
+
 # Kick a user from a permanent VC
 @config.bot.command(description="Kick User a VC")
 async def vc_mod_kick(ctx, vc_id, user_id):
@@ -65,6 +86,26 @@ async def vc_mod_kick(ctx, vc_id, user_id):
         # Check if the user is in the VC
         for member in voice_channel.members:
             if member.id == int(user_id):
+                await member.move_to(None)
+                await ctx.respond(f"Kicked user from VC", ephemeral=True)
+                return
+
+        await ctx.respond(f"User is not in the VC", ephemeral=True)
+
+    else:
+        await ctx.respond(f"You don't have Moderator rights", ephemeral=True)
+
+
+@config.bot.user_command(name="Moderator: Kick User from VC")
+async def vc_mod_ban_app(ctx, user: discord.User):
+    # Check if the User has a Moderator Role
+    mod_rights = utils.getModRights(ctx.author)
+    voice_channel = utils.getVCFromID(not user.voice.channel.id)
+
+    if mod_rights and isinstance(voice_channel, discord.VoiceChannel):
+        # Check if the user is in the VC
+        for member in voice_channel.members:
+            if member.id == int(user.id):
                 await member.move_to(None)
                 await ctx.respond(f"Kicked user from VC", ephemeral=True)
                 return

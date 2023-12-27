@@ -119,7 +119,3 @@ async def vc_help(ctx):
     await ctx.respond(embed=embed, ephemeral=True)
 
 
-@config.bot.user_command(name="User Info")
-async def user_info(ctx, user: discord.User):
-    await ctx.respond(f"Username: {user.name}\nID: {user.id}", ephemeral=True)
-
