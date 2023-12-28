@@ -4,7 +4,7 @@ import json
 
 def load_config():
     try:
-        print("Loading permanent Voice Channels:")
+        print("Loading Config:")
         with open(paths.config_path, "r") as json_file:
             try:
                 paths.config = json.load(json_file)
@@ -47,7 +47,5 @@ def load_vc():
     if paths.voice_channel_owners:
         for item in paths.voice_channel_owners:
             print(item)
-
-    print(paths.voice_channel_owners)
 
     print("Loading completed")
