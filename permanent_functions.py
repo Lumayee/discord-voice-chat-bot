@@ -57,29 +57,29 @@ async def vc_unban(ctx, user: discord.User):
 
 @config.bot.user_command(name="Unban User from your VC")
 async def vc_unban_app(ctx, user: discord.User):
-    await utils.unban_user_from_vc(ctx, None, user.id)
+    await utils.unban_user_from_vc(ctx, None, user)
 
 
 # Ban a user from your permanent VC
 @config.bot.command(description="Ban User from VC")
 async def vc_ban(ctx, user: discord.User):
-    await utils.ban_user_from_vc(ctx, None, user.id)
+    await utils.ban_user_from_vc(ctx, None, user)
 
 
 @config.bot.user_command(name="Ban User from your VC")
 async def vc_ban_app(ctx, user: discord.User):
-    await utils.ban_user_from_vc(ctx, None, user.id)
+    await utils.ban_user_from_vc(ctx, None, user)
 
 
 # Kick a user from your permanent VC
 @config.bot.command(description="Kick User from VC")
 async def vc_kick(ctx, user: discord.User):
-    await utils.kick_user_from_vc(ctx, None, user.id)
+    await utils.kick_user_from_vc(ctx, None, user)
 
 
 @config.bot.user_command(name="Kick User from your VC")
 async def vc_app_kick(ctx, user: discord.User):
-    await utils.kick_user_from_vc(ctx, None, user.id)
+    await utils.kick_user_from_vc(ctx, None, user)
 
 
 # Slash command to change the name of a permanent VC

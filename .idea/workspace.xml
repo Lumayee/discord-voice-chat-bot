@@ -4,8 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f9c84772-49c8-42d2-b22e-b521554a2386" name="Changes" comment="Changed the commands to improve usability">
-      <change beforePath="$PROJECT_DIR$/file_handling.py" beforeDir="false" afterPath="$PROJECT_DIR$/file_handling.py" afterDir="false" />
+    <list default="true" id="f9c84772-49c8-42d2-b22e-b521554a2386" name="Changes" comment="Fixed the output from the json loading things">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -112,7 +112,7 @@
       <workItem from="1703523708564" duration="17567000" />
       <workItem from="1703578747445" duration="9420000" />
       <workItem from="1703614350128" duration="29716000" />
-      <workItem from="1703707239944" duration="18210000" />
+      <workItem from="1703707239944" duration="18564000" />
     </task>
     <task id="LOCAL-00001" summary="Initial commit with working version">
       <option name="closed" value="true" />
@@ -298,7 +298,15 @@
       <option name="project" value="LOCAL" />
       <updated>1703730852746</updated>
     </task>
-    <option name="localTasksCounter" value="24" />
+    <task id="LOCAL-00024" summary="Fixed the output from the json loading things">
+      <option name="closed" value="true" />
+      <created>1703731132959</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1703731132959</updated>
+    </task>
+    <option name="localTasksCounter" value="25" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -339,18 +347,10 @@
     <MESSAGE value="Mode a few things smarter and reduced the code a lot" />
     <MESSAGE value="Fixed a lot more things and cleaned up the code" />
     <MESSAGE value="Changed the commands to improve usability" />
-    <option name="LAST_COMMIT_MESSAGE" value="Changed the commands to improve usability" />
+    <MESSAGE value="Fixed the output from the json loading things" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixed the output from the json loading things" />
   </component>
   <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/utils.py</url>
-          <line>150</line>
-          <option name="timeStamp" value="41" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
     <watches-manager>
       <configuration name="PythonConfigurationType">
         <watch expression="user.voice.channel.id" />

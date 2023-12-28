@@ -5,19 +5,17 @@ import asyncio
 from datetime import datetime
 
 
-def check_permanent_owner(user_id):
+def check_permanent_owner(user):
     # Check if the User owns a permanent VC
     owns_permanent_vc = False
     voice_channel = None
 
     for item in config.voice_channel_owners:
-        if user_id == item.get("User_ID") and item.get("Temp_VC") == "False":
+        if user.id == item.get("User_ID") and item.get("Temp_VC") == "False":
             owns_permanent_vc = True
             vc_id = item.get("VC_Channel_ID")
 
-            voice_channel = discord.utils.get(config.bot.get_all_channels(),
-                                              id=int(vc_id),
-                                              type=discord.ChannelType.voice)
+            voice_channel = get_vc_from_id(vc_id)
             break
 
     return owns_permanent_vc, voice_channel
@@ -38,80 +36,44 @@ def get_vc_from_id(vc_id):
     return vc_channel_id
 
 
-def get_mod_rights(user_id):
+def get_mod_rights(user):
     # Check if the User has a Moderator Role
     mod_rights = False
-    for role in user_id.roles:
+    for role in user.roles:
         if role.id in config.config.get("MOD_ROLES"):
             mod_rights = True
             break
     return mod_rights
 
 
-def is_user_banned(user_id, vc_id):
+async def add_ban(user, voice_channel):
     for item in config.voice_channel_owners:
-        if vc_id == item.get("VC_Channel_ID"):
-            if user_id in item.get("Ban"):
-                return True
-    return False
-
-
-def get_ban_list(vc_id):
-    for item in config.voice_channel_owners:
-        if vc_id == item.get("VC_Channel_ID"):
-            return item.get("Ban")
-    return None
-
-
-async def add_ban(user_id, vc_id):
-    for item in config.voice_channel_owners:
-        if vc_id == item.get("VC_Channel_ID"):
-            channel = get_vc_from_id(vc_id)
-            member = get_user_from_id(user_id)
-
-            overwrite = channel.overwrites_for(member)
+        if voice_channel.id == item.get("VC_Channel_ID"):
+            overwrite = voice_channel.overwrites_for(user)
             overwrite.connect = False
-            await channel.set_permissions(member, overwrite=overwrite)
+            await voice_channel.set_permissions(user, overwrite=overwrite)
 
-            item.get("Ban").append(user_id)
-            with open(config.file_path, "w") as json_file:
-                json.dump(config.voice_channel_owners, json_file, indent=4)
             return True
     return False
 
 
-async def remove_ban(user_id, vc_id):
+async def remove_ban(user, voice_channel):
     for item in config.voice_channel_owners:
-        if vc_id == item.get("VC_Channel_ID"):
-            channel = get_vc_from_id(vc_id)
-            member = get_user_from_id(user_id)
-
-            overwrite = channel.overwrites_for(member)
+        if voice_channel.id == item.get("VC_Channel_ID"):
+            overwrite = voice_channel.overwrites_for(user)
             overwrite.connect = True
-            await channel.set_permissions(member, overwrite=overwrite)
+            await voice_channel.set_permissions(user, overwrite=overwrite)
 
-            item.get("Ban").remove(int(user_id))
-            with open(config.file_path, "w") as json_file:
-                json.dump(config.voice_channel_owners, json_file, indent=4)
             return True
-    return False
-
-
-def is_banned(user_id, vc_id):
-    for item in config.voice_channel_owners:
-        if item.get("Ban") is not None:
-            for ban in item.get("Ban"):
-                if user_id == int(ban) and vc_id == item.get("VC_Channel_ID"):
-                    return True
     return False
 
 
 def get_permanent_vc_list():
-    test = []
+    vc_list = []
     for item in config.voice_channel_owners:
         if item.get("Temp_VC") == "False":
-            test.append(item.get("VC_Channel_ID"))
-    return test
+            vc_list.append(item.get("VC_Channel_ID"))
+    return vc_list
 
 
 # Check for inactive VCs
@@ -123,9 +85,8 @@ async def check_inactive_vcs():
         for item in config.voice_channel_owners:
             if (item.get("Temp_VC") == "False" and
                     (datetime.now().timestamp() - item.get("Last_Join", 0) > one_month_seconds)):
-                vc_channel_id = discord.utils.get(config.bot.get_all_channels(),
-                                                  id=int(item["VC_Channel_ID"]),
-                                                  type=discord.ChannelType.voice)
+
+                vc_channel_id = get_vc_from_id(item.get("VC_Channel_ID"))
                 await vc_channel_id.delete()
 
         await asyncio.sleep(86400)  # 24 hours in seconds
@@ -138,27 +99,27 @@ def append_to_json(entry):
     json_file.close()
 
 
-async def ban_user_from_vc(ctx, voice_channel, user_id):
+async def ban_user_from_vc(ctx, voice_channel, user):
     rights, voice_channel = await check_permissions(ctx, voice_channel)
     if rights:
-        if await add_ban(user_id, voice_channel.id):
+        if await add_ban(user, voice_channel):
             await ctx.respond(f"Banned user from VC", ephemeral=True)
         else:
             await ctx.respond(f"Error: Could not ban user", ephemeral=True)
 
 
-async def kick_user_from_vc(ctx, voice_channel, user_id):
+async def kick_user_from_vc(ctx, voice_channel, user):
     rights, voice_channel = await check_permissions(ctx, voice_channel)
     if rights:
         for member in voice_channel.members:
-            if member.id == int(user_id):
+            if member.id == int(user.id):
                 await member.move_to(None)
 
 
-async def unban_user_from_vc(ctx, voice_channel, user_id):
+async def unban_user_from_vc(ctx, voice_channel, user):
     rights, voice_channel = await check_permissions(ctx, voice_channel)
     if rights:
-        if await remove_ban(user_id, voice_channel.id):
+        if await remove_ban(user, voice_channel):
             await ctx.respond(f"Banned user from VC", ephemeral=True)
         else:
             await ctx.respond(f"Error: Could not ban user", ephemeral=True)
@@ -196,7 +157,7 @@ async def set_user_count_vc(ctx, voice_channel, user_count):
 async def check_permissions(ctx, voice_channel):
     if voice_channel is None:
         # Check for Perm User rights
-        owns_permanent_vc, voice_channel = check_permanent_owner(ctx.author.id)
+        owns_permanent_vc, voice_channel = check_permanent_owner(ctx.author)
         if owns_permanent_vc and isinstance(voice_channel, discord.VoiceChannel):
             return owns_permanent_vc, voice_channel
         else:

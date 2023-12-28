@@ -13,9 +13,9 @@ async def on_voice_state_update(member, before, after):
     if after and after.channel and after.channel.id == int(config.config.get("CREATE_CHANNEL")):
         guild = member.guild
         new_channel = await guild.create_voice_channel(f'{member.name} VC', category=after.channel.category)
-        creation = await member.move_to(new_channel)
+        await member.move_to(new_channel)
 
-        if isinstance(creation, discord.VoiceState):
+        if isinstance(new_channel, discord.VoiceChannel):
             print("Temporary VC: " + member.name + " created VC with ID: " + str(new_channel.id))
             # Write User ID and VC Channel ID to the json
             entry = {
