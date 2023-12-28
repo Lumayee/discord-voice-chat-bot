@@ -51,4 +51,3 @@ def load_vc():
     print(paths.voice_channel_owners)
 
     print("Loading completed")
-

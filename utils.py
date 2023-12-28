@@ -23,7 +23,7 @@ def check_permanent_owner(user_id):
     return owns_permanent_vc, voice_channel
 
 
-def getUserFromID(user_id):
+def get_user_from_id(user_id):
     for member in config.bot.get_all_members():
         if member.id == int(user_id):
             user = discord.utils.get(config.bot.get_all_members(), id=int(user_id))
@@ -31,14 +31,14 @@ def getUserFromID(user_id):
     return None
 
 
-def getVCFromID(vc_id):
+def get_vc_from_id(vc_id):
     vc_channel_id = discord.utils.get(config.bot.get_all_channels(),
                                       id=int(vc_id),
                                       type=discord.ChannelType.voice)
     return vc_channel_id
 
 
-def getModRights(user_id):
+def get_mod_rights(user_id):
     # Check if the User has a Moderator Role
     mod_rights = False
     for role in user_id.roles:
@@ -48,7 +48,7 @@ def getModRights(user_id):
     return mod_rights
 
 
-def isUserBanned(user_id, vc_id):
+def is_user_banned(user_id, vc_id):
     for item in config.voice_channel_owners:
         if vc_id == item.get("VC_Channel_ID"):
             if user_id in item.get("Ban"):
@@ -56,18 +56,18 @@ def isUserBanned(user_id, vc_id):
     return False
 
 
-def getBanList(vc_id):
+def get_ban_list(vc_id):
     for item in config.voice_channel_owners:
         if vc_id == item.get("VC_Channel_ID"):
             return item.get("Ban")
     return None
 
 
-async def addBan(user_id, vc_id):
+async def add_ban(user_id, vc_id):
     for item in config.voice_channel_owners:
         if vc_id == item.get("VC_Channel_ID"):
-            channel = getVCFromID(vc_id)
-            member = getUserFromID(user_id)
+            channel = get_vc_from_id(vc_id)
+            member = get_user_from_id(user_id)
 
             overwrite = channel.overwrites_for(member)
             overwrite.connect = False
@@ -80,11 +80,11 @@ async def addBan(user_id, vc_id):
     return False
 
 
-async def removeBan(user_id, vc_id):
+async def remove_ban(user_id, vc_id):
     for item in config.voice_channel_owners:
         if vc_id == item.get("VC_Channel_ID"):
-            channel = getVCFromID(vc_id)
-            member = getUserFromID(user_id)
+            channel = get_vc_from_id(vc_id)
+            member = get_user_from_id(user_id)
 
             overwrite = channel.overwrites_for(member)
             overwrite.connect = True
@@ -97,7 +97,7 @@ async def removeBan(user_id, vc_id):
     return False
 
 
-def isBanned(user_id, vc_id):
+def is_banned(user_id, vc_id):
     for item in config.voice_channel_owners:
         if item.get("Ban") is not None:
             for ban in item.get("Ban"):
@@ -106,7 +106,7 @@ def isBanned(user_id, vc_id):
     return False
 
 
-def getPermaentVCIDList():
+def get_permanent_vc_list():
     test = []
     for item in config.voice_channel_owners:
         if item.get("Temp_VC") == "False":
@@ -141,7 +141,7 @@ def append_to_json(entry):
 async def ban_user_from_vc(ctx, voice_channel, user_id):
     rights, voice_channel = await check_permissions(ctx, voice_channel)
     if rights:
-        if await addBan(user_id, voice_channel.id):
+        if await add_ban(user_id, voice_channel.id):
             await ctx.respond(f"Banned user from VC", ephemeral=True)
         else:
             await ctx.respond(f"Error: Could not ban user", ephemeral=True)
@@ -158,7 +158,7 @@ async def kick_user_from_vc(ctx, voice_channel, user_id):
 async def unban_user_from_vc(ctx, voice_channel, user_id):
     rights, voice_channel = await check_permissions(ctx, voice_channel)
     if rights:
-        if await removeBan(user_id, voice_channel.id):
+        if await remove_ban(user_id, voice_channel.id):
             await ctx.respond(f"Banned user from VC", ephemeral=True)
         else:
             await ctx.respond(f"Error: Could not ban user", ephemeral=True)
@@ -204,10 +204,9 @@ async def check_permissions(ctx, voice_channel):
             return False, None
     else:
         # Check for Mod rights
-        mod_rights = getModRights(ctx.author)
+        mod_rights = get_mod_rights(ctx.author)
         if mod_rights and isinstance(voice_channel, discord.VoiceChannel):
             return mod_rights, voice_channel
         else:
             await ctx.respond(f"You don't have Mod rights", ephemeral=True)
             return False, None
-

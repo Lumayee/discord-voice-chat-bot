@@ -1,7 +1,5 @@
 import discord
-import json
 import typing
-import file_handling
 import config
 import utils
 from datetime import datetime
@@ -51,6 +49,7 @@ async def vc_create(ctx, vc_name: typing.Optional[str] = None):
           str(ctx.author.id) + ") " + "created Voice Channel " + str(entry["VC_Channel_ID"]))
 
 
+# Remove the ban from a user
 @config.bot.command(description="unban User from VC")
 async def vc_unban(ctx, user_id):
     await utils.unban_user_from_vc(ctx, None, user_id)
@@ -61,6 +60,7 @@ async def vc_unban_app(ctx, user: discord.User):
     await utils.unban_user_from_vc(ctx, None, user.id)
 
 
+# Ban a user from your permanent VC
 @config.bot.command(description="Ban User from VC")
 async def vc_ban(ctx, user_id):
     await utils.ban_user_from_vc(ctx, None, user_id)

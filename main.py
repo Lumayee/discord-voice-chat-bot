@@ -1,5 +1,4 @@
 import discord
-import json
 import file_handling
 import config
 import utils
@@ -36,6 +35,3 @@ if config.config["TOKEN"]:
     config.bot.run(config.config["TOKEN"])
 else:
     print("No Token found in config.json")
-
-
-

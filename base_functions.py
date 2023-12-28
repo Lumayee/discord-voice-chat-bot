@@ -7,25 +7,30 @@ import utils
 # When a user joins/leaves a VC
 @config.bot.event
 async def on_voice_state_update(member, before, after):
-    permanentVCs = utils.getPermaentVCIDList()
+    permanent_vcs = utils.get_permanent_vc_list()
 
-    # User Joins the create VC
+    # User Joins the creation VC
     if after and after.channel and after.channel.id == int(config.config.get("CREATE_CHANNEL")):
         guild = member.guild
         new_channel = await guild.create_voice_channel(f'{member.name} VC', category=after.channel.category)
         creation = await member.move_to(new_channel)
 
-        print("Temporary VC: " + member.name + " created VC with ID: " + str(new_channel.id))
-        # Write User ID and VC Channel ID to the json
-        entry = {
-            "VC_Channel_ID": after.channel.id,
-            "Temp_VC": "True"
-        }
+        if isinstance(creation, discord.VoiceState):
+            print("Temporary VC: " + member.name + " created VC with ID: " + str(new_channel.id))
+            # Write User ID and VC Channel ID to the json
+            entry = {
+                "VC_Channel_ID": after.channel.id,
+                "Temp_VC": "True"
+            }
 
-        utils.append_to_json(entry)
+            utils.append_to_json(entry)
+
+        else:
+            await member.send("Failed to create VC")
+            await new_channel.delete()
 
     # User leaves a temp VC
-    if before and before.channel and before.channel.id not in permanentVCs and before.channel.id != int(
+    if before and before.channel and before.channel.id not in permanent_vcs and before.channel.id != int(
             config.config.get("CREATE_CHANNEL")):
         # If the temp VC is empty, delete it
         if len(before.channel.members) == 0:
@@ -84,6 +89,7 @@ async def on_member_remove(member):
                 await item.respond(f"Failed to delete VC", ephemeral=True)
 
 
+# Get the help message
 @config.bot.command(description="Help")
 async def vc_help(ctx):
     embed = discord.Embed(title="Help", description="Commands for the VC Bot", color=0x915F40)
@@ -107,8 +113,6 @@ async def vc_help(ctx):
     embed.add_field(name="/vc_mod_kick", value="Kicks a user from a permanent VC", inline=False)
     embed.add_field(name="/vc_mod_ban", value="Bans a user from a permanent VC", inline=False)
     embed.add_field(name="/vc_mod_unban", value="Unbans a user from a permanent VC", inline=False)
-    embed.add_field(name="/vc_mod_listpermaroles", value="Lists all permanent VC roles", inline=False)
+    embed.add_field(name="/vc_mod_list_perma_roles", value="Lists all permanent VC roles", inline=False)
 
     await ctx.respond(embed=embed, ephemeral=True)
-
-
