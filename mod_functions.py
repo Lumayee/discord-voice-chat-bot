@@ -18,14 +18,14 @@ async def vc_mod_list_perma_roles(ctx):
 
 # Unban a user from a permanent VC
 @config.bot.command(description="Mod: unban User from VC")
-async def vc_mod_unban(ctx, vc_id, user_id):
-    await utils.unban_user_from_vc(ctx, vc_id, user_id)
+async def vc_mod_unban(ctx, channel: discord.VoiceChannel, user: discord.User):
+    await utils.unban_user_from_vc(ctx, channel.id, user.id)
 
 
 # ban a user from a permanent VC
 @config.bot.command(description="Mod: Ban User from VC")
-async def vc_mod_ban(ctx, vc_id, user_id):
-    await utils.ban_user_from_vc(ctx, vc_id, user_id)
+async def vc_mod_ban(ctx, channel: discord.VoiceChannel, user: discord.User):
+    await utils.ban_user_from_vc(ctx, channel.id, user.id)
 
 
 @config.bot.user_command(name="Moderator: Kick User from VC")
@@ -35,23 +35,23 @@ async def vc_mod_ban_app(ctx, user: discord.User):
 
 # Kick a user from a permanent or temporary VC
 @config.bot.command(description="Kick User a VC")
-async def vc_mod_kick(ctx, vc_id, user_id):
-    await utils.kick_user_from_vc(ctx, vc_id, user_id)
+async def vc_mod_kick(ctx, channel: discord.VoiceChannel, user: discord.User):
+    await utils.kick_user_from_vc(ctx, channel, user.id)
 
 
 # Delete a permanent VC from another User
 @config.bot.command(description="Only for Mods: Delete VC")
-async def vc_mod_delete(ctx, vc_id):
-    await utils.delete_vc(ctx, vc_id)
+async def vc_mod_delete(ctx, channel: discord.VoiceChannel):
+    await utils.delete_vc(ctx, channel.id)
 
 
 # Rename a permanent VC from another User
 @config.bot.command(description="Only for Mods: Rename VC")
-async def vc_mod_rename(ctx, vc_id, new_name):
-    await utils.rename_vc(ctx, vc_id, new_name)
+async def vc_mod_rename(ctx, channel: discord.VoiceChannel, new_name):
+    await utils.rename_vc(ctx, channel.id, new_name)
 
 
 # Change the user limit of a permanent VC
 @config.bot.command(description="Only for Mods: Rename VC")
-async def vc_mod_set_user_count(ctx, vc_id, user_count):
-    await utils.set_user_count_vc(ctx, vc_id, user_count)
+async def vc_mod_set_user_count(ctx, channel: discord.VoiceChannel, user_count):
+    await utils.set_user_count_vc(ctx, channel.id, user_count)

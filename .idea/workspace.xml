@@ -4,14 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f9c84772-49c8-42d2-b22e-b521554a2386" name="Changes" comment="Mode a few things smarter and reduced the code a lot">
+    <list default="true" id="f9c84772-49c8-42d2-b22e-b521554a2386" name="Changes" comment="Fixed a lot more things and cleaned up the code">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/base_functions.py" beforeDir="false" afterPath="$PROJECT_DIR$/base_functions.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/file_handling.py" beforeDir="false" afterPath="$PROJECT_DIR$/file_handling.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/mod_functions.py" beforeDir="false" afterPath="$PROJECT_DIR$/mod_functions.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/permanent_functions.py" beforeDir="false" afterPath="$PROJECT_DIR$/permanent_functions.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -118,7 +114,7 @@
       <workItem from="1703523708564" duration="17567000" />
       <workItem from="1703578747445" duration="9420000" />
       <workItem from="1703614350128" duration="29716000" />
-      <workItem from="1703707239944" duration="17131000" />
+      <workItem from="1703707239944" duration="17813000" />
     </task>
     <task id="LOCAL-00001" summary="Initial commit with working version">
       <option name="closed" value="true" />
@@ -288,7 +284,15 @@
       <option name="project" value="LOCAL" />
       <updated>1703729058117</updated>
     </task>
-    <option name="localTasksCounter" value="22" />
+    <task id="LOCAL-00022" summary="Fixed a lot more things and cleaned up the code">
+      <option name="closed" value="true" />
+      <created>1703730227481</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1703730227481</updated>
+    </task>
+    <option name="localTasksCounter" value="23" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -327,7 +331,8 @@
     <MESSAGE value="More fixes" />
     <MESSAGE value="added app thingies and fixed some stuff" />
     <MESSAGE value="Mode a few things smarter and reduced the code a lot" />
-    <option name="LAST_COMMIT_MESSAGE" value="Mode a few things smarter and reduced the code a lot" />
+    <MESSAGE value="Fixed a lot more things and cleaned up the code" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixed a lot more things and cleaned up the code" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -351,7 +356,7 @@
     <SUITE FILE_PATH="coverage/VC_Bot$mod_functions.coverage" NAME="mod_functions Coverage Results" MODIFIED="1703704687531" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/VC_Bot$base_functions.coverage" NAME="base_functions Coverage Results" MODIFIED="1703701842589" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/VC_Bot$permanent_functions.coverage" NAME="permanent_functions Coverage Results" MODIFIED="1703622551138" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/VC_Bot$main.coverage" NAME="main Coverage Results" MODIFIED="1703729647850" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/VC_Bot$main.coverage" NAME="main Coverage Results" MODIFIED="1703730554014" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/VC_Bot$core.coverage" NAME="core Coverage Results" MODIFIED="1703716865903" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/.venv/lib/python3.9/site-packages/discord/commands" />
   </component>
 </project>
