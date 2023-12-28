@@ -63,9 +63,16 @@ def getBanList(vc_id):
     return None
 
 
-def addBan(user_id, vc_id):
+async def addBan(user_id, vc_id):
     for item in config.voice_channel_owners:
         if vc_id == item.get("VC_Channel_ID"):
+            channel = getVCFromID(vc_id)
+            member = getUserFromID(user_id)
+
+            overwrite = channel.overwrites_for(member)
+            overwrite.connect = False
+            await channel.set_permissions(member, overwrite=overwrite)
+
             item.get("Ban").append(user_id)
             with open(config.file_path, "w") as json_file:
                 json.dump(config.voice_channel_owners, json_file, indent=4)
@@ -73,10 +80,17 @@ def addBan(user_id, vc_id):
     return False
 
 
-def removeBan(user_id, vc_id):
+async def removeBan(user_id, vc_id):
     for item in config.voice_channel_owners:
         if vc_id == item.get("VC_Channel_ID"):
-            item.get("Ban").remove(user_id)
+            channel = getVCFromID(vc_id)
+            member = getUserFromID(user_id)
+
+            overwrite = channel.overwrites_for(member)
+            overwrite.connect = True
+            await channel.set_permissions(member, overwrite=overwrite)
+
+            item.get("Ban").remove(int(user_id))
             with open(config.file_path, "w") as json_file:
                 json.dump(config.voice_channel_owners, json_file, indent=4)
             return True
@@ -117,17 +131,83 @@ async def check_inactive_vcs():
         await asyncio.sleep(86400)  # 24 hours in seconds
 
 
-async def kick_user_from_vc(voice_channel, user_id):
-    if isinstance(voice_channel, discord.VoiceChannel):
-        for member in voice_channel.members:
-            if member.id == int(user_id):
-                await member.move_to(None)
-                return True
-        return False
-
-
 def append_to_json(entry):
     config.voice_channel_owners.append(entry)
     with open(config.file_path, "w") as json_file:
         json.dump(config.voice_channel_owners, json_file, indent=4)
     json_file.close()
+
+
+async def ban_user_from_vc(ctx, voice_channel, user_id):
+    rights, voice_channel = await check_permissions(ctx, voice_channel)
+    if rights:
+        if await addBan(user_id, voice_channel.id):
+            await ctx.respond(f"Banned user from VC", ephemeral=True)
+        else:
+            await ctx.respond(f"Error: Could not ban user", ephemeral=True)
+
+
+async def kick_user_from_vc(ctx, voice_channel, user_id):
+    rights, voice_channel = await check_permissions(ctx, voice_channel)
+    if rights:
+        for member in voice_channel.members:
+            if member.id == int(user_id):
+                await member.move_to(None)
+
+
+async def unban_user_from_vc(ctx, voice_channel, user_id):
+    rights, voice_channel = await check_permissions(ctx, voice_channel)
+    if rights:
+        if await removeBan(user_id, voice_channel.id):
+            await ctx.respond(f"Banned user from VC", ephemeral=True)
+        else:
+            await ctx.respond(f"Error: Could not ban user", ephemeral=True)
+
+
+async def rename_vc(ctx, voice_channel, new_name):
+    rights, voice_channel = await check_permissions(ctx, voice_channel)
+    if rights:
+        await voice_channel.edit(name=new_name)
+        await ctx.respond(f"Changed permanent VC Name to {new_name}", ephemeral=True)
+
+
+async def delete_vc(ctx, voice_channel):
+    rights, voice_channel = await check_permissions(ctx, voice_channel)
+    if rights:
+        await voice_channel.delete()
+        await ctx.respond(f"Deleted the voice channel", ephemeral=True)
+
+
+async def set_user_count_vc(ctx, voice_channel, user_count):
+    rights, voice_channel = await check_permissions(ctx, voice_channel)
+    if rights:
+        if user_count == 0:
+            await voice_channel.edit(user_limit=0)
+            await ctx.respond(f"Removed permanent VC User Limit", ephemeral=True)
+        if user_count > 99:
+            await voice_channel.edit(user_limit=99)
+            await ctx.respond(f"User count can't be higher than 99, applied 99 as current limit",
+                              ephemeral=True)
+        else:
+            await voice_channel.edit(user_limit=user_count)
+            await ctx.respond(f"Changed permanent VC User Count", ephemeral=True)
+
+
+async def check_permissions(ctx, voice_channel):
+    if voice_channel is None:
+        # Check for Perm User rights
+        owns_permanent_vc, voice_channel = check_permanent_owner(ctx.author.id)
+        if owns_permanent_vc and isinstance(voice_channel, discord.VoiceChannel):
+            return owns_permanent_vc, voice_channel
+        else:
+            await ctx.respond(f"You don't own a permanent VC", ephemeral=True)
+            return False, None
+    else:
+        # Check for Mod rights
+        mod_rights = getModRights(ctx.author)
+        if mod_rights and isinstance(voice_channel, discord.VoiceChannel):
+            return mod_rights, voice_channel
+        else:
+            await ctx.respond(f"You don't have Mod rights", ephemeral=True)
+            return False, None
+

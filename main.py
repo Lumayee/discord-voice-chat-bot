@@ -30,11 +30,6 @@ async def on_ready():
                 print("Temporary VC: deleted VC with ID: " + str(item["VC_Channel_ID"]))
 
 
-@config.bot.user_command(name="Test")
-async def test(ctx, user: discord.User):
-    await ctx.respond(f"Username: {user.name}\nID: {user.id}", ephemeral=True)
-
-
 file_handling.load_config()
 
 if config.config["TOKEN"]:

@@ -53,162 +53,48 @@ async def vc_create(ctx, vc_name: typing.Optional[str] = None):
 
 @config.bot.command(description="unban User from VC")
 async def vc_unban(ctx, user_id):
-    # Check if the User owns a permanent VC
-    owns_permanent_vc, voice_channel = utils.check_permanent_owner(ctx.author.id)
-
-    if owns_permanent_vc:
-        # Check if the channel is a VoiceChannel and then edit it
-        if isinstance(voice_channel, discord.VoiceChannel):
-            if utils.removeBan(user_id, voice_channel.id):
-                await ctx.respond(f"Banned user from VC", ephemeral=True)
-            else:
-                await ctx.respond(f"Error: Could not ban user", ephemeral=True)
-
-    else:
-        await ctx.respond(f"You don't own a permanent VC", ephemeral=True)
+    await utils.unban_user_from_vc(ctx, None, user_id)
 
 
-@config.bot.user_command(name="Unban User from your VC)")
+@config.bot.user_command(name="Unban User from your VC")
 async def vc_unban_app(ctx, user: discord.User):
-    # Check if the User owns a permanent VC
-    owns_permanent_vc, voice_channel = utils.check_permanent_owner(ctx.author.id)
+    await utils.unban_user_from_vc(ctx, None, user.id)
 
-    if owns_permanent_vc:
-        # Check if the channel is a VoiceChannel and then edit it
-        if isinstance(voice_channel, discord.VoiceChannel):
-            if utils.removeBan(user.id, voice_channel.id):
-                await ctx.respond(f"Banned user from VC", ephemeral=True)
-            else:
-                await ctx.respond(f"Error: Could not ban user", ephemeral=True)
-
-    else:
-        await ctx.respond(f"You don't own a permanent VC", ephemeral=True)
 
 @config.bot.command(description="Ban User from VC")
 async def vc_ban(ctx, user_id):
-    # Check if the User owns a permanent VC
-    owns_permanent_vc, voice_channel = utils.check_permanent_owner(ctx.author.id)
-
-    if owns_permanent_vc:
-        # Check if the channel is a VoiceChannel and then edit it
-        if isinstance(voice_channel, discord.VoiceChannel):
-            # Check if the user is in the VC
-
-            await utils.kick_user_from_vc(voice_channel, user_id)
-
-            if utils.addBan(user_id, voice_channel.id):
-                await ctx.respond(f"Banned user from VC", ephemeral=True)
-            else:
-                await ctx.respond(f"Error: Could not ban user", ephemeral=True)
-
-    else:
-        await ctx.respond(f"You don't own a permanent VC", ephemeral=True)
+    await utils.ban_user_from_vc(ctx, None, user_id)
 
 
-@config.bot.user_command(name="Ban User from your VC)")
+@config.bot.user_command(name="Ban User from your VC")
 async def vc_ban_app(ctx, user: discord.User):
-    # Check if the User owns a permanent VC
-    owns_permanent_vc, voice_channel = utils.check_permanent_owner(ctx.author.id)
-
-    if owns_permanent_vc:
-        # Check if the channel is a VoiceChannel and then edit it
-        if isinstance(voice_channel, discord.VoiceChannel):
-            # Check if the user is in the VC
-
-            await utils.kick_user_from_vc(voice_channel, user.id)
-
-            if utils.addBan(user.id, voice_channel.id):
-                await ctx.respond(f"Banned user from VC", ephemeral=True)
-            else:
-                await ctx.respond(f"Error: Could not ban user", ephemeral=True)
-
-    else:
-        await ctx.respond(f"You don't own a permanent VC", ephemeral=True)
-
+    await utils.ban_user_from_vc(ctx, None, user.id)
 
 
 # Kick a user from your permanent VC
 @config.bot.command(description="Kick User from VC")
 async def vc_kick(ctx, user_id):
-    # Check if the User owns a permanent VC
-    owns_permanent_vc, voice_channel = utils.check_permanent_owner(ctx.author.id)
-
-    if owns_permanent_vc:
-        await utils.kick_user_from_vc(voice_channel, user_id)
-        await ctx.respond(f"kicked user", ephemeral=True)
-
-    else:
-        await ctx.respond(f"You don't own a permanent VC", ephemeral=True)
+    await utils.kick_user_from_vc(ctx, None, user_id)
 
 
 @config.bot.user_command(name="Kick User from your VC")
 async def vc_app_kick(ctx, user: discord.User):
-    # Check if the User owns a permanent VC
-    owns_permanent_vc, voice_channel = utils.check_permanent_owner(ctx.author.id)
-
-    if owns_permanent_vc:
-        await utils.kick_user_from_vc(voice_channel, user.id)
-        await ctx.respond(f"kicked user", ephemeral=True)
-
-    else:
-        await ctx.respond(f"You don't own a permanent VC", ephemeral=True)
+    await utils.kick_user_from_vc(ctx, None, user.id)
 
 
 # Slash command to change the name of a permanent VC
 @config.bot.command(description="Rename your VC")
 async def vc_rename(ctx, new_name):
-    # Check if the User owns a permanent VC
-    owns_permanent_vc, voice_channel = utils.check_permanent_owner(ctx.author.id)
-
-    if owns_permanent_vc:
-        if isinstance(voice_channel, discord.VoiceChannel):
-            await voice_channel.edit(name=new_name)
-            await ctx.respond(f"Changed permanent VC Name to {new_name}", ephemeral=True)
-        else:
-            await ctx.respond(f"Channel with ID {voice_channel.id} "
-                              f"is not a voice channel or does not exist.", ephemeral=True)
-    else:
-        await ctx.respond(f"You don't own a permanent VC", ephemeral=True)
+    await utils.rename_vc(ctx, None, new_name)
 
 
 # Slash command to delete an permanent VC
 @config.bot.command(description="Delete VC")
 async def vc_delete(ctx):
-    # Check if the User owns a permanent VC
-    owns_permanent_vc, voice_channel = utils.check_permanent_owner(ctx.author.id)
-
-    if owns_permanent_vc:
-        if isinstance(voice_channel, discord.VoiceChannel):
-            await voice_channel.delete()
-            await ctx.respond(f"Deleted the voice channel", ephemeral=True)
-        else:
-            await ctx.respond(f"Channel with ID {voice_channel.id} "
-                              f"is not a voice channel or does not exist.", ephemeral=True)
-    else:
-        await ctx.respond(f"You don't own a permanent VC", ephemeral=True)
+    await utils.delete_vc(ctx, None)
 
 
 # Slash command to change the user limit of a permanent VC
 @config.bot.command(description="VC set User Limit")
 async def vc_set_user_count(ctx, user_count: int):
-    # Convert user_count to an integer if it's not
-    user_count = int(user_count)
-
-    owns_permanent_vc, voice_channel = utils.check_permanent_owner(ctx.author.id)
-
-    if owns_permanent_vc:
-        # Check if the channel is a VoiceChannel and then edit it
-        if isinstance(voice_channel, discord.VoiceChannel):
-            if user_count == 0:
-                await voice_channel.edit(user_limit=0)
-                await ctx.respond(f"Removed permanent VC User Limit", ephemeral=True)
-            if user_count > 99:
-                await voice_channel.edit(user_limit=99)
-                await ctx.respond(f"User count can't be higher than 99, applied 99 as current limit",
-                                  ephemeral=True)
-            else:
-                await voice_channel.edit(user_limit=user_count)
-                await ctx.respond(f"Changed permanent VC User Count", ephemeral=True)
-
-    else:
-        await ctx.respond(f"You don't own any permanent VCs", ephemeral=True)
+    await utils.set_user_count_vc(ctx, None, user_count)

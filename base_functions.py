@@ -24,13 +24,6 @@ async def on_voice_state_update(member, before, after):
 
         utils.append_to_json(entry)
 
-    # User Joins a permanent VC
-    elif after and after.channel and after.channel.id in permanentVCs:
-        print("Permanent VC: " + member.name + " joined VC with ID: " + str(after.channel.id))
-        if utils.isBanned(member.id, after.channel.id):
-            await member.move_to(None)
-            return
-
     # User leaves a temp VC
     if before and before.channel and before.channel.id not in permanentVCs and before.channel.id != int(
             config.config.get("CREATE_CHANNEL")):

@@ -4,12 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f9c84772-49c8-42d2-b22e-b521554a2386" name="Changes" comment="More fixes">
+    <list default="true" id="f9c84772-49c8-42d2-b22e-b521554a2386" name="Changes" comment="added app thingies and fixed some stuff">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/base_functions.py" beforeDir="false" afterPath="$PROJECT_DIR$/base_functions.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/mod_functions.py" beforeDir="false" afterPath="$PROJECT_DIR$/mod_functions.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/permanent_functions.py" beforeDir="false" afterPath="$PROJECT_DIR$/permanent_functions.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -43,7 +44,7 @@
     "Python.base_functions.executor": "Run",
     "Python.core.executor": "Debug",
     "Python.file_handling.executor": "Run",
-    "Python.main.executor": "Debug",
+    "Python.main.executor": "Run",
     "Python.mod_functions.executor": "Debug",
     "Python.permanent_functions.executor": "Debug",
     "Python.utils.executor": "Run",
@@ -113,7 +114,7 @@
       <workItem from="1703523708564" duration="17567000" />
       <workItem from="1703578747445" duration="9420000" />
       <workItem from="1703614350128" duration="29716000" />
-      <workItem from="1703707239944" duration="7628000" />
+      <workItem from="1703707239944" duration="15994000" />
     </task>
     <task id="LOCAL-00001" summary="Initial commit with working version">
       <option name="closed" value="true" />
@@ -267,7 +268,15 @@
       <option name="project" value="LOCAL" />
       <updated>1703712072663</updated>
     </task>
-    <option name="localTasksCounter" value="20" />
+    <task id="LOCAL-00020" summary="added app thingies and fixed some stuff">
+      <option name="closed" value="true" />
+      <created>1703719424251</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1703719424251</updated>
+    </task>
+    <option name="localTasksCounter" value="21" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -304,36 +313,37 @@
     <MESSAGE value="tried to fix stuff, but something is broken" />
     <MESSAGE value="It should work now" />
     <MESSAGE value="More fixes" />
-    <option name="LAST_COMMIT_MESSAGE" value="More fixes" />
+    <MESSAGE value="added app thingies and fixed some stuff" />
+    <option name="LAST_COMMIT_MESSAGE" value="added app thingies and fixed some stuff" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/base_functions.py</url>
-          <line>52</line>
+          <line>45</line>
           <option name="timeStamp" value="20" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/main.py</url>
-          <line>34</line>
-          <option name="timeStamp" value="30" />
+          <url>file://$PROJECT_DIR$/utils.py</url>
+          <line>150</line>
+          <option name="timeStamp" value="41" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/mod_functions.py</url>
-          <line>101</line>
-          <option name="timeStamp" value="31" />
+          <url>file://$PROJECT_DIR$/utils.py</url>
+          <line>199</line>
+          <option name="timeStamp" value="42" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/VC_Bot$utils.coverage" NAME="utils Coverage Results" MODIFIED="1703707800064" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/VC_Bot$utils.coverage" NAME="utils Coverage Results" MODIFIED="1703728493864" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/VC_Bot$file_handling.coverage" NAME="file_handling Coverage Results" MODIFIED="1703595626923" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/VC_Bot$mod_functions.coverage" NAME="mod_functions Coverage Results" MODIFIED="1703704687531" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/VC_Bot$base_functions.coverage" NAME="base_functions Coverage Results" MODIFIED="1703701842589" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/VC_Bot$permanent_functions.coverage" NAME="permanent_functions Coverage Results" MODIFIED="1703622551138" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/VC_Bot$main.coverage" NAME="main Coverage Results" MODIFIED="1703719212055" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/VC_Bot$main.coverage" NAME="main Coverage Results" MODIFIED="1703728826246" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/VC_Bot$core.coverage" NAME="core Coverage Results" MODIFIED="1703716865903" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/.venv/lib/python3.9/site-packages/discord/commands" />
   </component>
 </project>
