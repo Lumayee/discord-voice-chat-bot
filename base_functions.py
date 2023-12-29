@@ -97,25 +97,34 @@ async def on_member_remove(member):
 async def vc_help(ctx):
     embed = discord.Embed(title="Help", description="Commands for the VC Bot", color=0x915F40)
 
-    embed.add_field(name="**General Settings**", value="", inline=False)
-    embed.add_field(name="/ping", value="Sends the bots latency", inline=False)
-    embed.add_field(name="/vc_create", value="Creates a temporary VC", inline=False)
-    embed.add_field(name="/vc_set_user_count", value="Sets the user limit of your permanent VC", inline=False)
-    embed.add_field(name="/vc_rename", value="Renames your permanent VC", inline=False)
-    embed.add_field(name="/vc_delete", value="Deletes your permanent VC", inline=False)
-    embed.add_field(name="/vc_kick", value="Kicks a user from your permanent VC", inline=False)
-    embed.add_field(name="/vc_ban", value="Bans a user from your permanent VC", inline=False)
-    embed.add_field(name="/vc_unban", value="Unbans a user from your permanent VC", inline=False)
-    embed.add_field(name="/vc_help", value="Shows this help message", inline=False)
+    # General Settings
+    embed.add_field(name="**General Settings**", value="\u200B", inline=False)
+    embed.add_field(name="/ping", value="Displays the bot's latency.", inline=False)
+    embed.add_field(name="/vc_create", value="Creates a temporary voice channel (VC).", inline=False)
+    embed.add_field(name="/vc_set_user_count", value="Sets the user limit for your permanent VC.", inline=False)
+    embed.add_field(name="/vc_rename", value="Renames your permanent VC.", inline=False)
+    embed.add_field(name="/vc_delete", value="Deletes your permanent VC.", inline=False)
+    embed.add_field(name="/vc_kick", value="Kicks a user from your permanent VC.", inline=False)
+    embed.add_field(name="/vc_ban", value="Bans a user from your permanent VC.", inline=False)
+    embed.add_field(name="/vc_unban", value="Unbans a user from your permanent VC.", inline=False)
+    embed.add_field(name="/vc_help", value="Shows this help message.", inline=False)
 
-    embed.add_field(name="", value="", inline=False)
-    embed.add_field(name="", value="", inline=False)
-    embed.add_field(name="**Mod Settings**", value="", inline=False)
-    embed.add_field(name="/vc_mod_delete", value="Deletes a permanent VC", inline=False)
-    embed.add_field(name="/vc_mod_rename", value="Renames a permanent VC", inline=False)
-    embed.add_field(name="/vc_mod_kick", value="Kicks a user from a permanent VC", inline=False)
-    embed.add_field(name="/vc_mod_ban", value="Bans a user from a permanent VC", inline=False)
-    embed.add_field(name="/vc_mod_unban", value="Unbans a user from a permanent VC", inline=False)
-    embed.add_field(name="/vc_mod_list_perma_roles", value="Lists all permanent VC roles", inline=False)
+    # Mod Settings
+    embed.add_field(name="**Mod Settings**", value="\u200B", inline=False)
+    embed.add_field(name="/vc_mod_delete", value="Deletes a permanent VC.", inline=False)
+    embed.add_field(name="/vc_mod_rename", value="Renames a permanent VC.", inline=False)
+    embed.add_field(name="/vc_mod_kick", value="Kicks a user from a permanent VC.", inline=False)
+    embed.add_field(name="/vc_mod_ban", value="Bans a user from a permanent VC.", inline=False)
+    embed.add_field(name="/vc_mod_unban", value="Unbans a user from a permanent VC.", inline=False)
+    embed.add_field(name="/vc_mod_list_perma_roles", value="Lists all permanent VC roles.", inline=False)
+
+    # Admin Settings
+    embed.add_field(name="**Admin Settings**", value="\u200B", inline=False)
+    embed.add_field(name="/vc_admin_add_permanent_role", value="Adds a permanent role.", inline=False)
+    embed.add_field(name="/vc_admin_remove_permanent_role", value="Removes a permanent role.", inline=False)
+    embed.add_field(name="/vc_admin_add_to_blacklist", value="Adds a user to the blacklist.", inline=False)
+    embed.add_field(name="/vc_admin_remove_from_blacklist", value="Removes a user from the blacklist.", inline=False)
+    embed.add_field(name="/vc_admin_list_blacklist", value="Lists all users on the blacklist.", inline=False)
 
     await ctx.respond(embed=embed, ephemeral=True)
+

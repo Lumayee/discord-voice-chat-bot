@@ -79,7 +79,7 @@ async def vc_admin_list_blacklist(ctx):
     if admin_rights:
         embed = discord.Embed(title="Word Blacklist", description="List of all Blacklisted words", color=0x00ff00)
         for word in config.blacklist:
-            embed.add_field(name=word   , value="", inline=False)
+            embed.add_field(name=word, value="", inline=False)
 
         await ctx.respond(embed=embed, ephemeral=True)
     else:

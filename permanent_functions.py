@@ -17,6 +17,7 @@ async def vc_create(ctx, vc_name: typing.Optional[str] = None):
             await ctx.respond("You can only create one voice channel at a time.", ephemeral=True)
             print("Permanent VC: " + str(ctx.author.name) + "(" + str(ctx.author.id) + ") " +
                   "tried to create more than one permanent Voice Channels")
+            await utils.log(ctx.author.mention + " tried to create another permanent VC, but already owns one")
             return
 
     # Check if the User has the right role
@@ -24,6 +25,7 @@ async def vc_create(ctx, vc_name: typing.Optional[str] = None):
         await ctx.respond("You don't have the rights to create a permanent Voice Channel", ephemeral=True)
         print("Permanent VC: " + str(ctx.author.name) + "(" + str(ctx.author.id) + ") " +
               "tried to create a permanent Voice Channel without the right role")
+        await utils.log(ctx.author.mention + " tried to create an permanent VC without the necessary rights")
         return
 
     # If the name was Empty, set the name to the users name
@@ -38,6 +40,7 @@ async def vc_create(ctx, vc_name: typing.Optional[str] = None):
     # Create new channel, give user permissions and respond to them
     new_channel = await category.create_voice_channel(filtered_name)
     await ctx.respond(f"Voice Channel {filtered_name} was successfully created", ephemeral=True)
+    await utils.log(ctx.author.mention + " created permanent VC " + new_channel.name)
 
     # Write User ID and VC Channel ID to the json
     entry = {

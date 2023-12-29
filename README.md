@@ -17,14 +17,13 @@
 - [x] Kick a User from a temporary Voice Chat Channel
 
 ## Admin Features
-- [ ] Command to add or remove permanent Roles
+- [x] Command to add or remove permanent Roles
 
 ## Other Features
 - [x] Ping Command
 - [x] Help Command
-- [ ] Bot Status Command
 - [x] List permanent Voice Chat roles
-- [ ] Blacklist for Channel Names
+- [x] Blacklist for Channel Names
 - [x] File to permanently store Channel Information (for all permanent and temporary Voice Chat Channels)
 
 

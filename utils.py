@@ -136,36 +136,42 @@ def append_to_json(entry):
 
 async def ban_user_from_vc(ctx, voice_channel, user):
     rights, voice_channel = await check_permissions(ctx, voice_channel)
-    if rights:
+    if rights and voice_channel is not None:
         if await add_ban(user, voice_channel):
             await ctx.respond(f"Banned user from VC", ephemeral=True)
         else:
             await ctx.respond(f"Error: Could not ban user", ephemeral=True)
         await log(ctx.author.mention + " banned " + user.mention + " from " + voice_channel.name)
+    else:
+        await ctx.respond(f"Something went wrong", ephemeral=True)
 
 
 async def kick_user_from_vc(ctx, voice_channel, user):
     rights, voice_channel = await check_permissions(ctx, voice_channel)
-    if rights:
+    if rights and voice_channel is not None:
         for member in voice_channel.members:
             if member.id == int(user.id):
                 await member.move_to(None)
                 await log(ctx.author.mention + " kicked " + user.mention + " from " + voice_channel.name)
+    else:
+        await ctx.respond(f"Something went wrong", ephemeral=True)
 
 
 async def unban_user_from_vc(ctx, voice_channel, user):
     rights, voice_channel = await check_permissions(ctx, voice_channel)
-    if rights:
+    if rights and voice_channel is not None:
         if await remove_ban(user, voice_channel):
-            await ctx.respond(f"Banned user from VC", ephemeral=True)
-            await log(ctx.author.mention + " unbanned " + user.mention + " from " + voice_channel.name)
+            await ctx.respond(f"Unbanned user from VC", ephemeral=True)
+            await log(ctx.author.mentioan + " unbanned " + user.mention + " from " + voice_channel.name)
         else:
             await ctx.respond(f"Error: Could not ban user", ephemeral=True)
+    else:
+        await ctx.respond(f"Something went wrong", ephemeral=True)
 
 
 async def rename_vc(ctx, voice_channel, new_name):
     rights, voice_channel = await check_permissions(ctx, voice_channel)
-    if rights:
+    if rights and voice_channel is not None:
         filtered_name = blacklist_filter(new_name, config.blacklist)
         if filtered_name != new_name:
             await ctx.respond(f"The new name contained illegal words", ephemeral=True)
@@ -175,19 +181,23 @@ async def rename_vc(ctx, voice_channel, new_name):
         await log(ctx.author.mention + " changed permanent voice channel name from " + voice_channel.name
                   + " to " + filtered_name)
         await voice_channel.edit(name=filtered_name)
+    else:
+        await ctx.respond(f"Something went wrong", ephemeral=True)
 
 
 async def delete_vc(ctx, voice_channel):
     rights, voice_channel = await check_permissions(ctx, voice_channel)
-    if rights:
+    if rights and voice_channel is not None:
         await voice_channel.delete()
         await ctx.respond(f"Deleted the voice channel", ephemeral=True)
         await log(ctx.author.mention + " deleted permanent voice channel " + voice_channel.name)
+    else:
+        await ctx.respond(f"Something went wrong", ephemeral=True)
 
 
 async def set_user_count_vc(ctx, voice_channel, user_count):
     rights, voice_channel = await check_permissions(ctx, voice_channel)
-    if rights:
+    if rights and voice_channel is not None:
         if user_count <= 0:
             await voice_channel.edit(user_limit=0)
             await ctx.respond(f"Removed permanent voice chanel user limit", ephemeral=True)
@@ -203,6 +213,8 @@ async def set_user_count_vc(ctx, voice_channel, user_count):
             await ctx.respond(f"Changed permanent voice channel User Count", ephemeral=True)
             await log(ctx.author.mention + f" changed permanent voice channel user limit to {user_count} from "
                       + voice_channel.name)
+    else:
+        await ctx.respond(f"Something went wrong", ephemeral=True)
 
 
 async def check_permissions(ctx, voice_channel):
@@ -223,7 +235,10 @@ async def check_permissions(ctx, voice_channel):
         # Check for Mod rights
         mod_rights = get_mod_rights(ctx.author)
         if mod_rights and isinstance(voice_channel, discord.VoiceChannel):
-            return mod_rights, voice_channel
+            if voice_channel.id in config.config.get("UNMODIFIABLE_CHANNEL"):
+                return None, None
+            else:
+                return mod_rights, voice_channel
         else:
             await ctx.respond(f"You don't have Mod rights", ephemeral=True)
             await log(ctx.author.mention + " tried to change a permanent voice channel without mod rights")
@@ -231,12 +246,13 @@ async def check_permissions(ctx, voice_channel):
 
 
 async def log(message):
-    print(message)
+    current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    print("[" + current_time + "]" + message)
     channel = discord.utils.get(config.bot.get_all_channels(),
                                 id=config.config.get("LOG_CHANNEL"),
                                 type=discord.ChannelType.text)
 
-    embed = discord.Embed(title="Test", description="", color=0x00ff00)
+    embed = discord.Embed(title="Log message", description=current_time, color=0x00ff00)
     embed.add_field(name="", value=message)
 
     await channel.send(embed=embed)
