@@ -58,5 +58,5 @@ async def vc_mod_rename(ctx, channel: discord.VoiceChannel, new_name):
 
 # Change the user limit of a permanent VC
 @config.bot.command(description="Only for Mods: Rename VC")
-async def vc_mod_set_user_count(ctx, channel: discord.VoiceChannel, user_count):
+async def vc_mod_set_user_count(ctx, channel: discord.VoiceChannel, user_count: int):
     await utils.set_user_count_vc(ctx, channel, user_count)

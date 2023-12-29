@@ -20,10 +20,12 @@ async def on_voice_state_update(member, before, after):
             # Write User ID and VC Channel ID to the json
             entry = {
                 "VC_Channel_ID": after.channel.id,
-                "Temp_VC": "True"
+                "Temp_VC": "True",
+                "User_ID": member.id
             }
 
             utils.append_to_json(entry)
+            await utils.log("Temporary VC: " + member.mention + " created VC with ID: " + str(new_channel.id))
 
         else:
             await member.send("Failed to create VC")
@@ -36,6 +38,7 @@ async def on_voice_state_update(member, before, after):
         if len(before.channel.members) == 0:
             await before.channel.delete()
             print("Temporary VC: deleted VC with ID: " + str(before.channel.id))
+            await utils.log("Temporary VC: deleted VC with ID: " + str(before.channel.id))
 
 
 # Slash Command for Bot Ping

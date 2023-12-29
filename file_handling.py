@@ -17,7 +17,8 @@ def load_config():
                        "CREATE_CHANNEL": None,
                        "VC_CATEGORY": None,
                        "PERMANENT_ROLES": [],
-                       "MOD_ROLES": []}, json_file, indent=4)
+                       "MOD_ROLES": [],
+                       "LOG_Channel": None}, json_file, indent=4)
             print("Error: JSON File not found, creating empty JSON file")
 
     # Print the loaded VCs
