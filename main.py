@@ -36,6 +36,7 @@ async def test(ctx):
     await ctx.respond("Test successful", ephemeral=True)
 
 file_handling.load_config()
+file_handling.load_blacklist()
 
 if config.config["TOKEN"]:
     config.bot.run(config.config["TOKEN"])

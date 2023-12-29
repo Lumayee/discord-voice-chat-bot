@@ -3,6 +3,7 @@ import json
 import discord
 import asyncio
 from datetime import datetime
+import re
 
 
 def check_permanent_owner(user):
@@ -165,10 +166,15 @@ async def unban_user_from_vc(ctx, voice_channel, user):
 async def rename_vc(ctx, voice_channel, new_name):
     rights, voice_channel = await check_permissions(ctx, voice_channel)
     if rights:
-        await ctx.respond(f"Changed permanent VC Name to {new_name}", ephemeral=True)
+        filtered_name = blacklist_filter(new_name, config.blacklist)
+        if filtered_name != new_name:
+            await ctx.respond(f"The new name contained illegal words", ephemeral=True)
+            await log(ctx.author.mention + " used an illegal word in " + new_name)
+
+        await ctx.respond(f"Changed permanent VC Name to {filtered_name}", ephemeral=True)
         await log(ctx.author.mention + " changed permanent voice channel name from " + voice_channel.name
-                  + " to " + new_name)
-        await voice_channel.edit(name=new_name)
+                  + " to " + filtered_name)
+        await voice_channel.edit(name=filtered_name)
 
 
 async def delete_vc(ctx, voice_channel):
@@ -202,13 +208,13 @@ async def set_user_count_vc(ctx, voice_channel, user_count):
 async def check_permissions(ctx, voice_channel):
     if voice_channel is None:
         # Check for Perm User rights
-        owns_permanent_vc, voice_channel = check_permanent_owner(ctx.author)
-        owns_temporary_vc, voice_channel = check_temporary_owner(ctx.author)
+        owns_permanent_vc, permanent_voice_channel = check_permanent_owner(ctx.author)
+        owns_temporary_vc, temporary_voice_channel = check_temporary_owner(ctx.author)
 
-        if owns_permanent_vc and isinstance(voice_channel, discord.VoiceChannel):
-            return owns_permanent_vc, voice_channel
-        elif owns_temporary_vc and isinstance(voice_channel, discord.VoiceChannel):
-            return owns_temporary_vc, voice_channel
+        if owns_temporary_vc:
+            return owns_temporary_vc, temporary_voice_channel
+        elif owns_permanent_vc:
+            return owns_permanent_vc, permanent_voice_channel
         else:
             await ctx.respond(f"You don't own an permanent Voice Channel", ephemeral=True)
             await log(ctx.author.mention + " tried to change a permanent voice channel without owning one")
@@ -248,3 +254,12 @@ async def remove_from_list(changing_list, entry):
     with open(config.config_path, "w") as json_file:
         json.dump(config.config, json_file, indent=4)
     json_file.close()
+
+
+def text_replace(match):
+    return '*' * len(match.group())
+
+
+def blacklist_filter(text, blacklist):
+    blacklist_pattern = '|'.join(re.escape(word) for word in blacklist)
+    return re.sub(blacklist_pattern, text_replace, text, flags=re.IGNORECASE)

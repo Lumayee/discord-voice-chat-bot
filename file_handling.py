@@ -50,3 +50,25 @@ def load_vc():
             print(item)
 
     print("Loading completed")
+
+
+def load_blacklist():
+    try:
+        print("Loading Blacklist:")
+        with open(paths.blacklist_path, "r") as json_file:
+            try:
+                paths.blacklist = json.load(json_file)
+            except json.JSONDecodeError:
+                paths.blacklist = []
+                print("Error: JSON Decode Error, creating empty JSON file")
+    except FileNotFoundError:
+        with open(paths.blacklist_path, "w") as json_file:
+            json.dump([], json_file)
+            print("Error: JSON File not found, creating empty JSON file")
+
+    # Print the loaded VCs
+    if paths.blacklist:
+        for item in paths.blacklist:
+            print(item)
+
+    print("Loading completed")

@@ -30,9 +30,14 @@ async def vc_create(ctx, vc_name: typing.Optional[str] = None):
     if vc_name is None:
         vc_name = "Permanent VC from " + ctx.author.name
 
+    filtered_name = utils.blacklist_filter(vc_name, config.blacklist)
+    if filtered_name != vc_name:
+        await ctx.respond(f"The name contained illegal words", ephemeral=True)
+        await utils.log(ctx.author.mention + " used an illegal word in " + vc_name)
+
     # Create new channel, give user permissions and respond to them
-    new_channel = await category.create_voice_channel(vc_name)
-    await ctx.respond(f"Voice Channel {vc_name} was successfully created", ephemeral=True)
+    new_channel = await category.create_voice_channel(filtered_name)
+    await ctx.respond(f"Voice Channel {filtered_name} was successfully created", ephemeral=True)
 
     # Write User ID and VC Channel ID to the json
     entry = {
