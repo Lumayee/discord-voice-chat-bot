@@ -122,7 +122,7 @@ async def check_inactive_vcs():
 
                 vc_channel_id = get_vc_from_id(item.get("VC_Channel_ID"))
                 await vc_channel_id.delete()
-                await log("Inactive VC: deleted VC with ID: " + str(item.get("VC_Channel_ID")))
+                await log("Inactive VC: deleted VC with ID: " + str(item.get("VC_Channel_ID")), "Inactive VC")
 
         await asyncio.sleep(86400)  # 24 hours in seconds
 
@@ -141,7 +141,7 @@ async def ban_user_from_vc(ctx, voice_channel, user):
             await ctx.respond(f"Banned user from VC", ephemeral=True)
         else:
             await ctx.respond(f"Error: Could not ban user", ephemeral=True)
-        await log(ctx.author.mention + " banned " + user.mention + " from " + voice_channel.name)
+        await log(ctx.author.mention + " banned " + user.mention + " from " + voice_channel.name, "Ban User")
     else:
         await ctx.respond(f"Something went wrong", ephemeral=True)
 
@@ -152,7 +152,7 @@ async def kick_user_from_vc(ctx, voice_channel, user):
         for member in voice_channel.members:
             if member.id == int(user.id):
                 await member.move_to(None)
-                await log(ctx.author.mention + " kicked " + user.mention + " from " + voice_channel.name)
+                await log(ctx.author.mention + " kicked " + user.mention + " from " + voice_channel.name, "Kick User")
     else:
         await ctx.respond(f"Something went wrong", ephemeral=True)
 
@@ -162,7 +162,7 @@ async def unban_user_from_vc(ctx, voice_channel, user):
     if rights and voice_channel is not None:
         if await remove_ban(user, voice_channel):
             await ctx.respond(f"Unbanned user from VC", ephemeral=True)
-            await log(ctx.author.mentioan + " unbanned " + user.mention + " from " + voice_channel.name)
+            await log(ctx.author.mentioan + " unbanned " + user.mention + " from " + voice_channel.name, "Unban User")
         else:
             await ctx.respond(f"Error: Could not ban user", ephemeral=True)
     else:
@@ -175,11 +175,11 @@ async def rename_vc(ctx, voice_channel, new_name):
         filtered_name = blacklist_filter(new_name, config.blacklist)
         if filtered_name != new_name:
             await ctx.respond(f"The new name contained illegal words", ephemeral=True)
-            await log(ctx.author.mention + " used an illegal word in " + new_name)
+            await log(ctx.author.mention + " used an illegal word in " + new_name, "Rename VC")
 
         await ctx.respond(f"Changed permanent VC Name to {filtered_name}", ephemeral=True)
         await log(ctx.author.mention + " changed permanent voice channel name from " + voice_channel.name
-                  + " to " + filtered_name)
+                  + " to " + filtered_name, "Rename VC")
         await voice_channel.edit(name=filtered_name)
     else:
         await ctx.respond(f"Something went wrong", ephemeral=True)
@@ -190,7 +190,7 @@ async def delete_vc(ctx, voice_channel):
     if rights and voice_channel is not None:
         await voice_channel.delete()
         await ctx.respond(f"Deleted the voice channel", ephemeral=True)
-        await log(ctx.author.mention + " deleted permanent voice channel " + voice_channel.name)
+        await log(ctx.author.mention + " deleted permanent voice channel " + voice_channel.name, "Delete VC")
     else:
         await ctx.respond(f"Something went wrong", ephemeral=True)
 
@@ -201,18 +201,19 @@ async def set_user_count_vc(ctx, voice_channel, user_count):
         if user_count <= 0:
             await voice_channel.edit(user_limit=0)
             await ctx.respond(f"Removed permanent voice chanel user limit", ephemeral=True)
-            await log(ctx.author.mention + " removed permanent voice channel user limit from " + voice_channel.name)
+            await log(ctx.author.mention + " removed permanent voice channel user limit from " + voice_channel.name,
+                      "Set User Count")
         if user_count > 99:
             await voice_channel.edit(user_limit=99)
             await ctx.respond(f"User limit can't be higher than 99, applied 99 as current limit",
                               ephemeral=True)
             await log(ctx.author.mention + " changed permanent voice channel user limit to 99 from "
-                      + voice_channel.name)
+                      + voice_channel.name, "Set User Count")
         else:
             await voice_channel.edit(user_limit=user_count)
             await ctx.respond(f"Changed permanent voice channel User Count", ephemeral=True)
             await log(ctx.author.mention + f" changed permanent voice channel user limit to {user_count} from "
-                      + voice_channel.name)
+                      + voice_channel.name, "Set User Count")
     else:
         await ctx.respond(f"Something went wrong", ephemeral=True)
 
@@ -229,7 +230,8 @@ async def check_permissions(ctx, voice_channel):
             return owns_permanent_vc, permanent_voice_channel
         else:
             await ctx.respond(f"You don't own an permanent Voice Channel", ephemeral=True)
-            await log(ctx.author.mention + " tried to change a permanent voice channel without owning one")
+            await log(ctx.author.mention + " tried to change a permanent voice channel without owning one",
+                      "Permissions")
             return False, None
     else:
         # Check for Mod rights
@@ -241,18 +243,19 @@ async def check_permissions(ctx, voice_channel):
                 return mod_rights, voice_channel
         else:
             await ctx.respond(f"You don't have Mod rights", ephemeral=True)
-            await log(ctx.author.mention + " tried to change a permanent voice channel without mod rights")
+            await log(ctx.author.mention + " tried to change a permanent voice channel without mod rights",
+                      "Permissions")
             return False, None
 
 
-async def log(message):
+async def log(message, command):
     current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    print("[" + current_time + "]" + message)
+    print("[" + current_time + "] " + "[" + command + "] " + message)
     channel = discord.utils.get(config.bot.get_all_channels(),
                                 id=config.config.get("LOG_CHANNEL"),
                                 type=discord.ChannelType.text)
 
-    embed = discord.Embed(title="Log message", description=current_time, color=0x00ff00)
+    embed = discord.Embed(title=command, description=current_time, color=0x00ff00)
     embed.add_field(name="", value=message)
 
     await channel.send(embed=embed)
