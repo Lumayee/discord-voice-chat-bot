@@ -250,7 +250,7 @@ async def check_permissions(ctx, voice_channel):
 
 async def log(message, command):
     current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    print("[" + current_time + "] " + "[" + command + "] " + message)
+    print("[" + str(current_time) + "] " + "[" + command + "] " + str(message))
     channel = discord.utils.get(config.bot.get_all_channels(),
                                 id=config.config.get("LOG_CHANNEL"),
                                 type=discord.ChannelType.text)
