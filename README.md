@@ -70,8 +70,8 @@ MOD_ROLES = [int, int] or int
 
 ```bash
 sudo dnf install python3.11 python3-pip
-python3.11 -m venv PM-VC
-source PM-VC/bin/activate
+python3.11 -m venv venv
+source venv/bin/activate
 pip3 install py-cord
 deactivate
 ```
@@ -80,25 +80,28 @@ deactivate
 
 If you want to run the Bot as a service, you can use this example service file:
 
-Create the file `/etc/systemd/system/Discord-VC-Bot.service` with the following content:
+Create the file `/etc/systemd/system/discord-vc-bot.service` with the following content:
 
 ```bash
 [Unit]
 Description=Discord Voice Channel Bot
 After=network.target
+Wants=network-online.target
 
 [Service]
-User=potion-maker-bots
-WorkingDirectory=/home/potion-maker-bots/VC-Bot
-ExecStart=/home/potion-maker-bots/VC-Bot/PM-VC/bin/python3.11 /home/potion-maker-bots/VC-Bot/main.py
+User=discord-bots
+WorkingDirectory=/srv/discord-bots/discord-voice-chat-bot
+ExecStart=/srv/discord-bots/discord-voice-chat-bot/venv/bin/python3.11 /srv/discord-bots/discord-voice-chat-bot/main.py
+Restart=always
+RestartSec=120
 
 [Install]
 WantedBy=multi-user.target
 ```
 
 ```bash
-sudo systemctl enable Discord-VC-Bot
-sudo systemctl start Discord-VC-Bot
+sudo systemctl enable discord-vc-bot
+sudo systemctl start discord-vc-bot
 ```
 
 

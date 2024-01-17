@@ -4,7 +4,7 @@ import utils
 
 
 # Get a list of all Roles able to create a permanent VCs
-@config.bot.command(description="List all permanent VC Roles")
+@config.bot.command(description="Mod Only! List all permanent VC roles")
 async def vc_mod_list_perma_roles(ctx):
     mod_rights = utils.get_mod_rights(ctx.author)
 
@@ -17,46 +17,77 @@ async def vc_mod_list_perma_roles(ctx):
 
 
 # Unban a user from a permanent VC
-@config.bot.command(description="Mod: unban User from VC")
+@config.bot.command(description="Mod Only! unban user from VC")
 async def vc_mod_unban(ctx, channel: discord.VoiceChannel, user: discord.User):
     await utils.unban_user_from_vc(ctx, channel, user)
 
 
 # ban a user from a permanent VC
-@config.bot.command(description="Mod: Ban User from VC")
+@config.bot.command(description="Mod Only! Ban user from VC")
 async def vc_mod_ban(ctx, channel: discord.VoiceChannel, user: discord.User):
     await utils.ban_user_from_vc(ctx, channel, user)
 
 
-@config.bot.user_command(name="Moderator: Ban User from VC")
+@config.bot.user_command(name="Mod Only! Ban user from VC")
 async def vc_mod_ban_app(ctx, user: discord.User):
     await utils.ban_user_from_vc(ctx, user.voice.channel, user)
 
 
 # Kick a user from a permanent or temporary VC
-@config.bot.command(description="Kick User a VC")
+@config.bot.command(description="Mod Only! Kick user a VC")
 async def vc_mod_kick(ctx, channel: discord.VoiceChannel, user: discord.User):
     await utils.kick_user_from_vc(ctx, channel, user)
 
 
-@config.bot.user_command(name="Moderator: Kick User a VC")
+@config.bot.user_command(name="Mod Only! Moderator: Kick user a VC")
 async def vc_mod_kick_app(ctx, user: discord.User):
     await utils.kick_user_from_vc(ctx, user.voice.channel, user)
 
 
 # Delete a permanent VC from another User
-@config.bot.command(description="Only for Mods: Delete VC")
+@config.bot.command(description="Mod Only! Delete VC")
 async def vc_mod_delete(ctx, channel: discord.VoiceChannel):
     await utils.delete_vc(ctx, channel)
 
 
 # Rename a permanent VC from another User
-@config.bot.command(description="Only for Mods: Rename VC")
+@config.bot.command(description="Mod Only! Rename VC")
 async def vc_mod_rename(ctx, channel: discord.VoiceChannel, new_name):
     await utils.rename_vc(ctx, channel, new_name)
 
 
 # Change the user limit of a permanent VC
-@config.bot.command(description="Only for Mods: Rename VC")
+@config.bot.command(description="Mod Only! Rename VC")
 async def vc_mod_set_user_count(ctx, channel: discord.VoiceChannel, user_count: int):
     await utils.set_user_count_vc(ctx, channel, user_count)
+
+
+# Remove a permanent VC Role
+@config.bot.command(description="Mod Only! Add a permanent VC role")
+async def vc_mod_add_permanent_role(ctx, role: discord.Role):
+    await utils.vc_mod_add_permanent_role(ctx, role)
+
+
+# Add a permanent VC Role
+@config.bot.command(description="Mod Only! Remove a permanent VC role")
+async def vc_mod_remove_permanent_role(ctx, role: discord.Role):
+    await utils.vc_mod_remove_permanent_role(ctx, role)
+
+
+# Add word to blacklist
+@config.bot.command(description="Mod Only! Remove from blacklist")
+async def vc_mod_blacklist_add(ctx, word):
+    await utils.vc_mod_add_to_blacklist(ctx, word)
+
+
+# Remove word from blacklist
+@config.bot.command(description="Mod Only! Remove from blacklist")
+async def vc_mod_blacklist_remove(ctx, word):
+    await utils.vc_mod_remove_from_blacklist(ctx, word)
+
+
+# List blacklist
+@config.bot.command(description="Mod Only! List blacklist")
+async def vc_mod_blacklist_list(ctx):
+    await utils.vc_mod_list_blacklist(ctx)
+
