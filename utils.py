@@ -5,11 +5,6 @@ import asyncio
 from datetime import datetime
 import re
 
-enum = {
-    "non urgent": 0,
-    "default": 1,
-    "critical": 2}
-
 
 def check_permanent_owner(user):
     # Check if the User owns a permanent VC
@@ -270,7 +265,7 @@ def color_switch(level):
         return 0x00ff00
 
 
-async def log(message, command, level="default"):
+async def log(message, command, level):
 
     color = color_switch(level)
 

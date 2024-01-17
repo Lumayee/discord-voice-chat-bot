@@ -4,12 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f9c84772-49c8-42d2-b22e-b521554a2386" name="Changes" comment="fixed an error with the log">
-      <change beforePath="$PROJECT_DIR$/.idea/VC Bot.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/VC Bot.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="f9c84772-49c8-42d2-b22e-b521554a2386" name="Changes" comment="Combined Mod and Admin. Added Colors to Mod embeds.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mod_functions.py" beforeDir="false" afterPath="$PROJECT_DIR$/mod_functions.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/permanent_functions.py" beforeDir="false" afterPath="$PROJECT_DIR$/permanent_functions.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -126,7 +123,7 @@
       <workItem from="1705429039583" duration="73000" />
       <workItem from="1705515605217" duration="5551000" />
       <workItem from="1705524928206" duration="142000" />
-      <workItem from="1705525072238" duration="1747000" />
+      <workItem from="1705525072238" duration="2953000" />
     </task>
     <task id="LOCAL-00001" summary="Initial commit with working version">
       <option name="closed" value="true" />
@@ -368,7 +365,15 @@
       <option name="project" value="LOCAL" />
       <updated>1704004060225</updated>
     </task>
-    <option name="localTasksCounter" value="31" />
+    <task id="LOCAL-00031" summary="Combined Mod and Admin. Added Colors to Mod embeds.">
+      <option name="closed" value="true" />
+      <created>1705526860102</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1705526860102</updated>
+    </task>
+    <option name="localTasksCounter" value="32" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -386,7 +391,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Some Linux Service Stuff" />
     <MESSAGE value="a part of the main was missing, lol" />
     <MESSAGE value="added a few functions and made a few comments" />
     <MESSAGE value="Fixed functions" />
@@ -411,7 +415,8 @@
     <MESSAGE value="I think it Works now" />
     <MESSAGE value="Made the logs better" />
     <MESSAGE value="fixed an error with the log" />
-    <option name="LAST_COMMIT_MESSAGE" value="fixed an error with the log" />
+    <MESSAGE value="Combined Mod and Admin. Added Colors to Mod embeds." />
+    <option name="LAST_COMMIT_MESSAGE" value="Combined Mod and Admin. Added Colors to Mod embeds." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
