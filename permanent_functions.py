@@ -18,7 +18,7 @@ async def vc_create(ctx, vc_name: typing.Optional[str] = None):
             print("Permanent VC: " + str(ctx.author.name) + "(" + str(ctx.author.id) + ") " +
                   "tried to create more than one permanent Voice Channels")
             await utils.log(ctx.author.mention + " tried to create another permanent VC, but already owns one",
-                            "Permanent VC Creation", "normal")
+                            "Permanent VC Creation", "norights")
             return
 
     # Check if the User has the right role
@@ -27,7 +27,7 @@ async def vc_create(ctx, vc_name: typing.Optional[str] = None):
         print("Permanent VC: " + str(ctx.author.name) + "(" + str(ctx.author.id) + ") " +
               "tried to create a permanent Voice Channel without the right role")
         await utils.log(ctx.author.mention + " tried to create an permanent VC without the necessary rights",
-                        "Permanent VC Creation", "urgent")
+                        "Permanent VC Creation", "norights")
         return
 
     # If the name was Empty, set the name to the users name
@@ -37,13 +37,14 @@ async def vc_create(ctx, vc_name: typing.Optional[str] = None):
     filtered_name = utils.blacklist_filter(vc_name, config.blacklist)
     if filtered_name != vc_name:
         await ctx.respond(f"The name contained illegal words", ephemeral=True)
-        await utils.log(ctx.author.mention + " used an illegal word in " + vc_name, "Permanent VC Creation")
+        await utils.log(ctx.author.mention + " used an illegal word in " + vc_name,
+                        "Permanent VC Creation", "norights")
 
     # Create new channel, give user permissions and respond to them
     new_channel = await category.create_voice_channel(filtered_name)
     await ctx.respond(f"Voice Channel {filtered_name} was successfully created", ephemeral=True)
     await utils.log(ctx.author.mention + " created permanent VC " + new_channel.name,
-                    "Permanent VC Creation", "normal")
+                    "Permanent VC Creation", "info")
 
     # Write User ID and VC Channel ID to the json
     entry = {
@@ -109,3 +110,8 @@ async def vc_delete(ctx):
 @config.bot.command(description="VC set User Limit")
 async def vc_set_user_count(ctx, user_count: int):
     await utils.set_user_count_vc(ctx, None, user_count)
+
+
+@config.bot.command(description="Transfer ownership of your VC")
+async def vc_transfer(ctx, user: discord.User):
+    await utils.transfer_ownership(ctx, None, user)

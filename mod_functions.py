@@ -39,7 +39,7 @@ async def vc_mod_kick(ctx, channel: discord.VoiceChannel, user: discord.User):
     await utils.kick_user_from_vc(ctx, channel, user)
 
 
-@config.bot.user_command(name="Mod Only! Moderator: Kick user a VC")
+@config.bot.user_command(name="Mod Only! Kick user a VC")
 async def vc_mod_kick_app(ctx, user: discord.User):
     await utils.kick_user_from_vc(ctx, user.voice.channel, user)
 
@@ -90,4 +90,3 @@ async def vc_mod_blacklist_remove(ctx, word):
 @config.bot.command(description="Mod Only! List blacklist")
 async def vc_mod_blacklist_list(ctx):
     await utils.vc_mod_list_blacklist(ctx)
-

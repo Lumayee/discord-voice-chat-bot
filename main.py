@@ -5,7 +5,6 @@ import utils
 import permanent_functions
 import mod_functions
 import base_functions
-import admin_functions
 
 
 # After the Bot is ready
@@ -29,11 +28,6 @@ async def on_ready():
                 await vc_channel_id.delete()
                 print("Temporary VC: deleted VC with ID: " + str(item["VC_Channel_ID"]))
 
-
-@config.bot.command(description="Test")
-async def test(ctx):
-    await utils.log("Test:" + ctx.author.mention)
-    await ctx.respond("Test successful", ephemeral=True)
 
 file_handling.load_config()
 file_handling.load_blacklist()

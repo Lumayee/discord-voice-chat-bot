@@ -117,14 +117,11 @@ async def vc_help(ctx):
     embed.add_field(name="/vc_mod_ban", value="Bans a user from a permanent VC.", inline=False)
     embed.add_field(name="/vc_mod_unban", value="Unbans a user from a permanent VC.", inline=False)
     embed.add_field(name="/vc_mod_list_perma_roles", value="Lists all permanent VC roles.", inline=False)
-
-    # Admin Settings
-    embed.add_field(name="**Admin Settings**", value="\u200B", inline=False)
-    embed.add_field(name="/vc_admin_add_permanent_role", value="Adds a permanent role.", inline=False)
-    embed.add_field(name="/vc_admin_remove_permanent_role", value="Removes a permanent role.", inline=False)
-    embed.add_field(name="/vc_admin_add_to_blacklist", value="Adds a user to the blacklist.", inline=False)
-    embed.add_field(name="/vc_admin_remove_from_blacklist", value="Removes a user from the blacklist.", inline=False)
-    embed.add_field(name="/vc_admin_list_blacklist", value="Lists all users on the blacklist.", inline=False)
+    embed.add_field(name="/vc_mod_add_permanent_role", value="Adds a permanent role.", inline=False)
+    embed.add_field(name="/vc_mod_remove_permanent_role", value="Removes a permanent role.", inline=False)
+    embed.add_field(name="/vc_mod_add_to_blacklist", value="Adds a user to the blacklist.", inline=False)
+    embed.add_field(name="/vc_mod_remove_from_blacklist", value="Removes a user from the blacklist.", inline=False)
+    embed.add_field(name="/vc_mod_list_blacklist", value="Lists all users on the blacklist.", inline=False)
 
     await ctx.respond(embed=embed, ephemeral=True)
 

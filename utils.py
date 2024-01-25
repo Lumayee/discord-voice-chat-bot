@@ -63,16 +63,6 @@ def get_mod_rights(user):
     return mod_rights
 
 
-def get_admin_rights(user):
-    # Check if the User has a Moderator Role
-    admin_rights = False
-    for role in user.roles:
-        if role.id in config.config.get("ADMIN_ROLES"):
-            admin_rights = True
-            break
-    return admin_rights
-
-
 async def add_ban(user, voice_channel):
     for item in config.voice_channel_owners:
         if voice_channel.id == item.get("VC_Channel_ID"):
@@ -123,7 +113,7 @@ async def check_inactive_vcs():
                 vc_channel_id = get_vc_from_id(item.get("VC_Channel_ID"))
                 await vc_channel_id.delete()
                 await log("Inactive VC: deleted VC with ID: " + str(item.get("VC_Channel_ID")),
-                          "Check for inactive VCs", "non urgent")
+                          "Check for inactive VCs", "info")
 
         await asyncio.sleep(86400)  # 24 hours in seconds
 
@@ -143,7 +133,7 @@ async def ban_user_from_vc(ctx, voice_channel, user):
         else:
             await ctx.respond(f"Error: Could not ban user", ephemeral=True)
         await log(ctx.author.mention + " banned " + user.mention + " from " + voice_channel.name,
-                  "Ban User", "critical")
+                  "Ban User", "info")
     else:
         await ctx.respond(f"Something went wrong", ephemeral=True)
 
@@ -155,7 +145,7 @@ async def kick_user_from_vc(ctx, voice_channel, user):
             if member.id == int(user.id):
                 await member.move_to(None)
                 await log(ctx.author.mention + " kicked " + user.mention + " from " + voice_channel.name,
-                          "Kick User", "normal")
+                          "Kick User", "info")
     else:
         await ctx.respond(f"Something went wrong", ephemeral=True)
 
@@ -166,7 +156,7 @@ async def unban_user_from_vc(ctx, voice_channel, user):
         if await remove_ban(user, voice_channel):
             await ctx.respond(f"Unbanned user from VC", ephemeral=True)
             await log(ctx.author.mentioan + " unbanned " + user.mention + " from " + voice_channel.name,
-                      "Unban User", "critical")
+                      "Unban User", "info")
         else:
             await ctx.respond(f"Error: Could not ban user", ephemeral=True)
     else:
@@ -180,11 +170,11 @@ async def rename_vc(ctx, voice_channel, new_name):
         if filtered_name != new_name:
             await ctx.respond(f"The new name contained illegal words", ephemeral=True)
             await log(ctx.author.mention + " used an illegal word in " + new_name,
-                      "Rename VC", "critical")
+                      "Rename VC", "info")
 
         await ctx.respond(f"Changed permanent VC Name to {filtered_name}", ephemeral=True)
         await log(ctx.author.mention + " changed permanent voice channel name from " + voice_channel.name
-                  + " to " + filtered_name, "Rename VC", "normal")
+                  + " to " + filtered_name, "Rename VC", "info")
         await voice_channel.edit(name=filtered_name)
     else:
         await ctx.respond(f"Something went wrong", ephemeral=True)
@@ -196,7 +186,7 @@ async def delete_vc(ctx, voice_channel):
         await voice_channel.delete()
         await ctx.respond(f"Deleted the voice channel", ephemeral=True)
         await log(ctx.author.mention + " deleted permanent voice channel " + voice_channel.name,
-                  "Delete VC", "critical")
+                  "Delete VC", "info")
     else:
         await ctx.respond(f"Something went wrong", ephemeral=True)
 
@@ -208,18 +198,18 @@ async def set_user_count_vc(ctx, voice_channel, user_count):
             await voice_channel.edit(user_limit=0)
             await ctx.respond(f"Removed permanent voice chanel user limit", ephemeral=True)
             await log(ctx.author.mention + " removed permanent voice channel user limit from " + voice_channel.name,
-                      "Set User Count", "normal")
+                      "Set User Count", "info")
         if user_count > 99:
             await voice_channel.edit(user_limit=99)
             await ctx.respond(f"User limit can't be higher than 99, applied 99 as current limit",
                               ephemeral=True)
             await log(ctx.author.mention + " changed permanent voice channel user limit to 99 from "
-                      + voice_channel.name, "Set User Count", "normal")
+                      + voice_channel.name, "Set User Count", "info")
         else:
             await voice_channel.edit(user_limit=user_count)
             await ctx.respond(f"Changed permanent voice channel User Count", ephemeral=True)
             await log(ctx.author.mention + f" changed permanent voice channel user limit to {user_count} from "
-                      + voice_channel.name, "Set User Count", "normal")
+                      + voice_channel.name, "Set User Count", "info")
     else:
         await ctx.respond(f"Something went wrong", ephemeral=True)
 
@@ -237,7 +227,7 @@ async def check_permissions(ctx, voice_channel):
         else:
             await ctx.respond(f"You don't own an permanent Voice Channel", ephemeral=True)
             await log(ctx.author.mention + " tried to change a permanent voice channel without owning one",
-                      "No Permissions", "critical")
+                      "No Permissions", "norights")
             return False, None
     else:
         # Check for Mod rights
@@ -250,19 +240,21 @@ async def check_permissions(ctx, voice_channel):
         else:
             await ctx.respond(f"You don't have Mod rights", ephemeral=True)
             await log(ctx.author.mention + " tried to change a permanent voice channel without mod rights",
-                      "No Moderator Permissions", "critical")
+                      "No Moderator Permissions", "nomod")
             return False, None
 
 
 def color_switch(level):
-    if level == "non urgent":
-        return 0x00ff00
-    elif level == "default":
-        return 0xffff00
-    elif level == "critical":
-        return 0xff0000
+    if level == "info":
+        return 0x8aadf4
+    elif level == "mod":
+        return 0xc6a0f6
+    elif level == "nomod":
+        return 0xf5a97f
+    elif level == "norights":
+        return 0xed8796
     else:
-        return 0x00ff00
+        return 0xcad3f5
 
 
 async def log(message, command, level):
@@ -312,12 +304,13 @@ async def vc_mod_add_permanent_role(ctx, role: discord.Role):
             await add_to_list(config.config["PERMANENT_ROLES"], role.id)
             await ctx.respond("Role added to list", ephemeral=True)
             await log("Admin: " + ctx.author.mention + " added " + role.mention
-                            + " to the permanent VC Roles", "Add Permanent Role", "critical")
+                            + " to the permanent VC Roles", "Add Permanent Role", "mod")
         else:
             await ctx.respond("Role already in list", ephemeral=True)
     else:
         await ctx.respond("You don't have the rights to use this command", ephemeral=True)
-        await log(ctx.author.mention + " tried to use the Admin Command vc_admin_add_permanent_role", "Add Permanent Role", "critical")
+        await log(ctx.author.mention + " tried to use the Moderator Command vc_admin_add_permanent_role",
+                  "Add Permanent Role", "nomod")
 
 
 async def vc_mod_remove_permanent_role(ctx, role: discord.Role):
@@ -328,13 +321,13 @@ async def vc_mod_remove_permanent_role(ctx, role: discord.Role):
             await remove_from_list(config.config["PERMANENT_ROLES"], role.id)
             await ctx.respond("Role removed from list", ephemeral=True)
             await log("Admin: " + ctx.author.mention + " removed " + role.mention
-                            + " from the permanent VC Roles", "Remove Permanent Role", "critical")
+                            + " from the permanent VC Roles", "Remove Permanent Role", "mod")
         else:
             await ctx.respond("Role not in list", ephemeral=True)
     else:
         await ctx.respond("You don't have the rights to use this command", ephemeral=True)
-        await log(ctx.author.mention + " tried to use the Admin Command vc_admin_remove_permanent_role",
-                  "Remove Permanent Role", "critical")
+        await log(ctx.author.mention + " tried to use the Moderator Command vc_admin_remove_permanent_role",
+                  "Remove Permanent Role", "nomod")
 
 
 async def vc_mod_add_to_blacklist(ctx, word):
@@ -347,11 +340,12 @@ async def vc_mod_add_to_blacklist(ctx, word):
                 json.dump(config.blacklist, json_file, indent=4)
             json_file.close()
             await log(ctx.author.mention + " added the word " + word + " to the blacklist",
-                      "Add to Blacklist", "critical")
+                      "Add to Blacklist", "mod")
             await ctx.respond("Added " + word + " to the Blacklist", ephemeral=True)
     else:
         await ctx.respond("You don't have the rights to use this command", ephemeral=True)
-        await log(ctx.author.mention + " tried to use the Admin Command vc_admin_remove_permanent_role")
+        await log(ctx.author.mention + " tried to use the Moderator Command vc_admin_remove_permanent_role",
+                  "Add to Blacklist", "nomod")
 
 
 async def vc_mod_remove_from_blacklist(ctx, word):
@@ -364,12 +358,12 @@ async def vc_mod_remove_from_blacklist(ctx, word):
                 json.dump(config.blacklist, json_file, indent=4)
             json_file.close()
             await log(ctx.author.mention + " removed the word " + word + " from the blacklist",
-                      "Remove from Blacklist", "critical")
+                      "Remove from Blacklist", "mod")
             await ctx.respond("Removed " + word + " from the Blacklist", ephemeral=True)
     else:
         await ctx.respond("You don't have the rights to use this command", ephemeral=True)
-        await log(ctx.author.mention + " tried to use the Admin Command vc_admin_remove_from_blacklist",
-                  "Remove from Blacklist", "critical")
+        await log(ctx.author.mention + " tried to use the Moderator Command vc_admin_remove_from_blacklist",
+                  "Remove from Blacklist", "nomod")
 
 
 async def vc_mod_list_blacklist(ctx):
@@ -383,5 +377,31 @@ async def vc_mod_list_blacklist(ctx):
         await ctx.respond(embed=embed, ephemeral=True)
     else:
         await ctx.respond("You don't have the rights to use this command", ephemeral=True)
-        await log(ctx.author.mention + " tried to use the Admin Command vc_admin_list_blacklist",
-                  "List Blacklist", "critical")
+        await log(ctx.author.mention + " tried to use the Moderator Command vc_admin_list_blacklist",
+                  "List Blacklist", "nomod")
+
+
+async def transfer_ownership(ctx, voice_channel, user: discord.User):
+    owns_permanent_vc, voice_channel = check_permanent_owner(ctx.author)
+    if owns_permanent_vc:
+        destination_user, destination_voice_channel = check_permanent_owner(user)
+        if destination_user:
+            await ctx.respond("User already owns a VC", ephemeral=True)
+        else:
+            for item in config.voice_channel_owners:
+                if voice_channel.id == item.get("VC_Channel_ID"):
+                    item["User_ID"] = user.id
+                    item["Last_Join"] = datetime.now().timestamp()
+
+                    with open(config.file_path, "w") as json_file:
+                        json.dump(config.voice_channel_owners, json_file, indent=4)
+                    json_file.close()
+
+                    await ctx.respond("VC transferred", ephemeral=True)
+                    await ctx.log(ctx.author.mention + " transferred " + voice_channel.name + " to " + user.mention,
+                                  "Transfer Ownership", "info")
+                    break
+    else :
+        await ctx.respond("You don't own a VC", ephemeral=True)
+        await log(ctx.author.mention + " tried to transfer a VC without owning one",
+                  "Transfer Ownership", "norights")
