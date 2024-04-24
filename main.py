@@ -6,7 +6,6 @@ import permanent_functions
 import mod_functions
 import base_functions
 
-
 # After the Bot is ready
 @config.bot.event
 async def on_ready():
